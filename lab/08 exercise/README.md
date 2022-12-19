@@ -1,0 +1,2 @@
+Il prof ci ha dato un file da scaricare, dobbiamo spiegare come valuta gli AST(Abstract Syntax Tree), questi alberi gestiscono operazioni anche con i double.  
+Aspetto che qualcuno lo faccia che non sto capendo un cazzo.
