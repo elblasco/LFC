@@ -25,4 +25,4 @@ Tutta la restante parte dei compilatori.
 ### Vantaggi
 La parte di *front-end* è dipendente dal linguaggio, poniamo di avere *N* linguaggi.
 La parte di *back-end* e dipendente dall'architettura della macchina, supponiamo di avere *K* architetture diverse.
-Grazie alla divisione in *back-end* e *front-end* possiamo avere *N\*K* 
+Grazie alla divisione in *back-end* e *front-end* possiamo avere *N\*K*  compilatori.
