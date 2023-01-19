@@ -8,7 +8,7 @@ Alcuni codici sorgenti sono sintattucamente legali, mentre altri no, la grammati
 	E.g. possiamo tradure  `pippo = 2 * 3` in `<ID,pippo> ASS <NUM,2> MUL <NUM,3> SEMCOL`
 * **Analisi sintattica:** controlla se il flusso di *token* aderisce o meno alla grammatica.
   In caso affermativo lo stream viene convertito in un *parse tree* o ancora meglio in un *abstract syntax tree*.
-	E.g. ![Parse tree](parse_tree_intro.png) ![abstract syntax tree](abstract_syntax_tree_intro.png)
+	E.g. ![Parse tree](./img/00/parse_tree_intro.png) ![abstract syntax tree](./img/00/abstract_syntax_tree_intro.png)
 * **Analisi semantica:** dato un *syntax tree* e le informazioni della *symbol table* controlla la consistenza del codice.
 	E.g. *type checking* oppure conversione di tipi detta *coercions*.
 * **Generazione di codice intermedio:** converte il *parse tree* in un codice testuale intermedio.
