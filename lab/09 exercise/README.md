@@ -1,0 +1,1 @@
+Gestione delle variabili e di operazioni tra di esse.
