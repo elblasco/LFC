@@ -93,7 +93,7 @@ Una grammatica *G* è ambigua se e solo se esiste una parola $w\in$L(G) che può
 ### Esempio
 E $\to$ E+E | E\*E | n ; è ambigua?
 Prendiamo w=n+n\*n
-![Possibili parse tree](./img/01/ambiguity_parse_tree.png)
+![Possibili parse tree](./img/01/ambiguity_parse_tree.png)  
 Come si può vedere anche se abbiamo cambiato derivazioni canoniche la parola generata è la stessa.
 ### Osservazioni
 L'ambiguità è indecidibile e non possono essere creati algoritmi in grado di capire se una grammatica è ambigua o meno.
