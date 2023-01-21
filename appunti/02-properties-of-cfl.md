@@ -1,4 +1,4 @@
-## Unione
+## Chiusura rispetto all'unione
 ### Lemma
 La classe dei linguaggi liberi è chiusa rispetto all'unione insiemistica $\cup$, quindi se $L_1$ e $L_2$ sono due linguaggi liberi allora $L_1 \cup L_2$ è in linguagio libero.
 ### Dimostrazione
@@ -28,7 +28,7 @@ Allora $L(G_1)=\{aa\}$ e $L(G_2)=\{bb\}$.
 Facendo il *name refresh* di $G_2$, $A$ diventa $A^\prime$, posso quindi creare l'unione delle grammatiche. 
 $$G_3: \begin{cases} S \to S_1|S_2\\ S_1 \to aA\\ S_2 \to bA^\prime\\ A \to a\\ A^\prime \to b \end{cases}$$
 Possiamo ora vedere che $L(G_3) = \{aa,\ bb\} = \{aa\} \cup \{bb\} = L(G_1) \cup L(G_2)$ .
-## Concatenazione
+## Chiusura rispetto alla concatenazione
 ### Lemma
 La classe dei linguaggi liberi è chiusa rispetto alla concatenazione, quindi se $L_1$ e $L_2$ sono linguaggi liberi allora $\{w_1 w_2 | w_1 \in L_1 \land w_2 \in L_2\}$ è un linguaggio libero.
 ### Dimostrazione
@@ -146,4 +146,23 @@ Possiamo vedere che $w_1 \notin L$ per cui $L$ non è un linguaggio libero.
 * $\{a^n b^n c^j \ | \ n,j > 0\}$ è libero, concatenazione di due linguaggi $\{a^n b^n \ | \ n > 0\}$ e $\{c^j \ | \ j > 0\}$
 * $\{a^j b^n c^n \ | \ j,n > 0\}$ è libero, concatenazione di due linguaggi $\{a^j \ | \ j > 0\}$ e $\{b^n c^n \ | \ n > 0\}$
 ## Pumping lemma per cfl variant
+### Note iniziali
 Trasformiamo una grammatica $G^\prime$ in una grammatica in *Chomsky normal form* $G$, quindi avrà la forma.
+$$G: \begin{cases} A \to a\\  A \to A_1 A_2 \\ \vdots \end{cases}$$
+### Dimostrazione
+Sia $k$ il numero di non terminali in $G$ e che essendo in *Chomsky nomrla form* l'albero di derivazione di $L(G)$ sarà sempre un albero binario del tipo:
+![tree-pumping-variant](./img/02/pumping-variant.png)
+Pongo allora $p = 2^{k+1}$ e $z \in L$ tale che $|z| \geq p$, allora l'albero di derivazione di $z$ avrà almeno $k+2$ livelli.
+Il percorso più lungo attraversa $k+1$ non terminali, quindi c'è almeno una coppia lungo il percorso.
+Da qui si prosegue come nella dimostrazione del pumping lemma per cfl "normale".
+## Chiusura rispetto all'intersezione
+### Lemma
+La classe dei linguaggi liberi non è chiusa rispetto all'intersezione.
+### Dimostrazione
+Per dimostrare la non chiusura basta trovare un esempio che la viola, eseguiamo questa dimostrazione in modo "empirico".
+Prendiamo due linguaggi liberi:
+$$L_1=\{a^n b^n c^j \ | \ n,j > 0 \}$$
+$$L_2 = \{ a^j b^n c^n \ | \ n,j > 0\}$$
+La loro intersezione sarà $L_3 = L_1 \cap L_2$:
+$$L_3 = \{ a^n b^n c^n \ | \ n > 0 \}$$
+Rifacendoci agli esempi noti visti in precedenza sappiamo che questo linguaggio non è libero, abbiamo quindi trovato un contro esempio per la chiusura rispetto all'interseione.
