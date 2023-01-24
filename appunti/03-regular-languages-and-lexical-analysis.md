@@ -1,6 +1,7 @@
 ## Riconoscere i linguaggi
 Prendiamo l'esempio di $L = \{ a^n b^n \ | \ n > 0 \}$, una buona scelta è usare uno stack, prima inserisco tutte le $a$, poi faccio una `pop` per ogni $b$ che leggo, se alla fine lo stack è vuoto allora la parole appartiene al linguaggio.
 Però con dei linguaggi più complessi non ho scelta e devo usare una macchina a stati.
+
 ![example-of-state-automa](./img/03/ex-state-automa.png)
 ## Linguaggi regolari
 Le grammatiche regolari sono grammatiche libere che hanno solo produzioni della forma:
@@ -64,6 +65,7 @@ La tupla $\mathcal{N}$ viene rappresentata come un grafo diretto, dove:
 * Gli archi sono la funzione di transizione
 #### Esempio
 ![NFA-rappresentation](./img/03/NFA-rappresentation.png)
+
 Il non determiniscmo è dato dalla presenza dalla presenza di più stati nell'immagine della funzione move$_n(S_0,a)$, che va sia in $S_0$ sia in $S_1$.
 Possiamo anche creare una rappresentazione tabellare della funzione di transizione:
 | | $\varepsilon$ | $a$ | $b$ |
@@ -94,9 +96,13 @@ La costruzione è basata sulla definizione induttiva di regex:
 		* Definisco un NFA per riconoscere $L(r^*_1)$
 		* Definisco un NFA per riconoscere $L((r_1))$
 Graficamente la base della costruzione di Thompson è:
+
 ![base-step-Thompson](./img/03/thompson-base.png)
+
 Mentre il passo induttivo come:
+
 ![induction-step-thompson](./img/03/thompson-step.png)
+
 Ogni passo per la costruzione introduce al più 2 nuovi stati, quindi l'NFA generato ha al più $2k$ stati, con $k$ il numero di simboli e di operatori nell'espressione regolare.
 In ogni NFA intermedio ci sono:
 * Esattamente uno stato finale
@@ -111,11 +117,17 @@ Consideriamo ogni passo svolto in tempo costante, abbiamo un totale di $|r|$ pas
 Supponiamo di avere la regex $r = (a|b)^*abb$, dobbiamo inanzitutto scomporla in sotto-regex.$$r_1 = (a|b) \hspace{2em} \to \hspace{2em} r_2 = r_1^* = (a|b)^* \hspace{2em} \to \hspace{2em} r_3 = r_2 \cdot abb = (a|b)^*abb$$
 Ora possiamo iniziare la costruzione di Thompson partendo da $r_1$ e aggiungendo pezzi fino a $r_3$:
 Iniziamo con l'automa per $r_1$:
+
 ![thompson-1st-regex](./img/03/thompson-1st-regex.png)
+
 Ora dobbiamo implementare la *Klenee star* per poter ripere $r_1$ 0 o più volte:
+
 ![thompson-2nd-regex](./img/03/thompson-2nd-regex.png)
+
 Infine passiamo all'automa per $r_3$ nel quale semplicemenete prendiamo quello per $r_2$ e facciamo l'append di $abb$:
+
 ![thompon-3rd-regex](./img/03/thompson-3rd-regex.png)
+
 ## Simulazione di NFAs
 Dopo aver costruito il nostro NFA dobbiamo verificare su una parola $w \in L(\mathcal{N})$.
 Per poter fare questa verifica ci serve *simulare l'auotma*, dobbiamo trovare un'algoritmo formale in grado di poter fare questa verifica senza usare *backstrack* che farebbe aumentare assurdamente il costo della funzione.
@@ -171,7 +183,9 @@ else
 	return “no” ;
 ````
 #### Esempio di simulazione
+
 ![simulation-NFA-example](./img/03/simulation-ex.png)
+
 Dato l'NFA sopra pensiamo di dover verificare cha la parola $w = ababb$ appartenga o meno al linguaggio generato da esso.
 Ci serviamo di una tabella per vedere meglio i passaggi:
 | states | symbol | move | $\varepsilon$-closure |
@@ -231,3 +245,204 @@ E' possibile notare molto velocemente alcune caratteristiche di questa funzione 
 * In tutti i DFA non esistono $\varepsilon$-transizioni per via di com'è definito il dominio della funzione move$_d$.
 * Se move$_d$ è *totale* allora per ogni stato c'è **esattamente** una una $a$-transizione $\forall a \in \mathcal{A}$.
 * Se move$_d$ è *parziale* allora per ogni stato esiste **al più** una $a$-transizione $\forall a \in \mathcal{A}$.
+## Simulazione di DFAs
+### Linguaggio riconosciuto
+Il linguaggio accettato da un DFA $\mathcal{D}$, denotato da $L(\mathcal{D})$, è l'insieme delle parole $w$ tali che:
+* O esiste un cammino che fa lo spelling $w = a_1 \dots a_k$ con $k \geq 1$ dallo stato iniziale di $\mathcal{D}$ ad uno finale.
+* Oppure lo stato iniziale è anche finale $w = \varepsilon$.
+### Simulazione con funzione di transizione totale
+Iniziando dallo stato inziale seguo il cammino che fa lo spelling di $w$, se raggiungo uno stato finale ritorno "yes", altrimenti ritorno "no".
+### Simulazione con funzione di transizione parziale
+Iniziando dallo stato iniziale seguo il cammino che fa lo spelling di $w = a_1 \dots a_k$, se per qualche carattere $a_i$ non esiste uno stato "target" ritorno immediatamente "no".
+Se raggiungo uno stato finale allora ritorno "yes",altrimenti ritorno "no".
+### Funzione parziale vs. totale
+Dato un DFA $\mathcal{D}$ con funzione di transizione parziale posso allora definire un altro DFA $\mathcal{D}^\prime$ con funzione di transizione totale tale che $L(\mathcal{D}) = L(\mathcal{D}^\prime)$.
+Devo usare dgli stati "morti" detti sink, ovvero uno stato che srà l'oobbiettivo di tutte le transizioni mancanti e avrà dei self-loop per ogni lettera del mio alfabeto.
+## Costruzione dei subset
+Dato un NFA $\mathcal{N}$ devo costruire un DFA $\mathcal{D}$ tale che $L(\mathcal{D}) = L(\mathcal{N})$.
+**Idea:** Uso le $\varepsilon$-closure per mappare i subset degli stati di un NFA in un singolo stato di un DFA.
+### Algoritmo
+````
+input : NFA N = (S, A, moven , s0, F )
+output : DFA D = (R, A, moved , t0, E ) such that L(D) = L(N)
+t0 = ε-closure({s0});
+R = {t0};
+set t0 as unmarked;
+while some T ∈ R is unmarked do
+	mark T;
+	foreach a ∈ A do
+		T' = ε-closure(⋃t∈T moven(t, a));
+		if T' != ∅ then
+			moved(T, a) = T';
+			if T' ∉ R then
+				add T' to R;
+				set T' as unmarked;
+foreach T ∈ R do  
+	if (T ∩ F) != ∅ then set T ∈ E;
+````
+### Complessità
+La complessità è data dal ciclo `while`, dal ciclo `foreach` annidato e dalla computazione delle $\varepsilon$-closure.
+Dobbiamo fare delle premesse, poniamo che l'NFA abbia $n$ stati e $m$ archi, mentre il DFA in output abbia $n_d$ stati.
+* Il ciclo `while` va a scorrere tutti gli stati del DFA contenuti in `R`  per verificare `unmarked` nel caso peggiore $O(n_d)$.
+* Il ciclo `foreach` annidato scorre ogni singolo elemento dell'alfabeto e quindi viene ripetuto $\Theta (|\mathcal{A}|)$ volte.
+* Infinme il calcolo delle $\varepsilon$-closure ha costo $O(n+m)$.
+Risulta che la complessità finale $O(n_d \cdot |\mathcal{A}| \cdot (n+m))$.
+### Esempio
+Proviamo ora dato un NFA a convertirlo in DFA.
+
+![NFA-to-DFA](./img/03/NFA-to-DFA-ex.png)
+
+Prima cosa cerco tutto l'alfabeto, ho solo due lementi $a$ e $b$, quindi dovrò fare le $\varepsilon$-cchiusure solo di questi per ogni nodi.
+| Stati | $\varepsilon$-closure $a$-transizioni | $\varepsilon$-closure $b$-transizioni |
+| --- | --- | --- |
+| $\varepsilon (0) = T_0 =$ {0,1,2,4,7} | $\varepsilon (3,8) = T_1 =$ {1,2,3,4,6,7,8} | $\varepsilon (5) = T_2 =$ {1,2,4,5,6,7} |
+| $T_1 =$ {1,2,3,4,6,7,8} | $\varepsilon (3,8) = T_1$ | $\varepsilon (5,9) = T_3 =$ {1,2,4,5,6,7,9} |
+| $T_2 =$ {1,2,4,5,6,7} | $\varepsilon (3,8) = T_1$ | $\varepsilon (5) = T_2$ |
+| $T_3 =$ {1,2,4,5,6,7,9} | $\varepsilon (3,8) = T_1$ | $\varepsilon (5,10) = T_4 =$ {1,2,4,5,6,7,10} |
+| $T_4 =$ {1,2,4,5,6,7,**10**} | $\varepsilon (3,8) = T_1$ | $\varepsilon (5) = T_2$ |
+
+Facendo una rappresentazione grafica:
+
+![final-DFA-ex](./img/03/final-DFA-ex.png)
+
+Come si può notare non è il miglior DFA che possiamo ottenere, ma è comunque un DFA valido per linguaggio $L((a|b)^*abb)$.
+## Minimizzazione DFA
+Dato un DFA $\mathcal{D}$ devo ottenere un DFA $\mathcal{D^\prime}$, con il minor numero di stati possibile, tale che $L(\mathcal{D^\prime}) = L(\mathcal{D})$.
+L'idea è he ci sono degli stati rindondanti, ovvero presi due stati $s$ e $t$ allora:
+$$\forall a \in \mathcal{A}^*, \text{move}^*_d(s,a) \in F \iff \text{move}^*_d(t,a) \in F$$
+### Equivalenza di stati
+Sia $\mathcal{D} = (S, \mathcal{A}, \text{move}_d, s_0, F)$ un DFA con funzione di transizione totale , allora $s,t \in S$ sono equivalenti se e solo se vale:
+$$\forall a \in \mathcal{A}^*, \text{move}^*_d(s,a) \in F \iff \text{move}^*_d(t,a) \in F$$
+Dove la funzione di transizione multi-passo move$^*_d$ è definita con l'induzione sulla lunghezza della stringa.
+* $\text{move}^*_d (s, \varepsilon) = s$
+* $\text{move}^*_d (s, wa) = \text{move}^*_d(\text{move}^*_d(s,w),a)$
+### Raffinamento delle partizioni
+Con questo processo arriveremo a dividere gli stati in blocchi, ovvero sottoinsiemi disgiunti di $S$.
+Iniziamo con 2 blocchi:
+* $B_1 = F$
+* $B_2 = S \backslash F$
+Facciamo questa scelta perchè con $s \in B_1$ e $t \in B_2$ non sono equivalenti perchè $\text{move}^*_d (s, \varepsilon) \in F$ e $\text{move}^*_d (t, \varepsilon) \notin F$.
+Per i passi successivi dobbiamo verificare che in ogni blocco ci siano solo stati equivalenti.
+Se tutti gli stati un $B_i = \{ s_1, \dots , s_k\}$ sono equivalenti allora $\forall a \in \mathcal{A}$ gli stati obbiettivo delle $a$-transizioni da $s_1, \dots , s_k$ sono tutti nello stesso blocco.
+Il blocco $B_i$ può essere diviso se per qualche $s,t \in B_i$ $\text{move}_d(s,a) \in B_j \land \text{move}_d(t,a) \notin B_j$, la divisione si compie dividendo in due insiemi:
+* {$s \in B_i \ | \ \text{move}_d(s,a) \in B_j$}
+* {$s \in B_i \ | \ \text{move}_d(s,a) \notin B_j$}
+Si noti che se non abbiamo un DFA con funzione cNompleta possiamo sempre aggiungere un *sink* e il min-DFA in output non è detto abbia una funzione totale.
+#### Esempio 1
+
+![DFA-minimization](./img/03/DFA-minimization-ex.png)
+
+Creo i blocchi iniziali $B_1 = \{E\}$ e $B_2 = \{A,B,C,D\}$.
+Separo $B_2$: $B_1=\{E\},\ B_{21} = \{D\},\ B_{22} = \{A,B,C\}$ .
+Separo $B_{22}:$ $B_1 = \{E\},\ B_{21} = \{D\}, \ B_{221} = \{B\}, \ B_{222} = \{A,C\}$.
+
+![DFA-minimization](./img/03/DFA-minimization-ex-pt2.png)
+
+#### Esempio 2
+Dato il seguente DFA con funzione parziale restituire il DFA minimizzato.
+
+![DFA-minimization-2](./img/03/DFA-minimization-ex2.png)
+
+Avendo una funzione parziale posso aggiungere un *sink* per rendere la funzione totale.
+
+![DFA-minimization](./img/03/DFA-minimization-ex2-pt2.png)
+
+Iniziamo con $B_1 = \{D\}$ e $B_2 = \{A,B,C,sink\}$.
+Separo $B_2$ perchè $\text{move}_d(C/B,a) \in B_1$, $B_1 = \{D\}$ e $B_{21} = \{A,sink\}$ e $B_{22} = \{B,C\}$.
+Separo $B_{21}$ perchè $\text{move}_d(A,a) \in B_{22}$, $B_1 = \{D\}$ e $B_{211} = \{A\}$ e $B_{212} = \{sink\}$ e $B_{22} = \{B,C\}$.
+Infine separo $B_{22}$ perchè $\text{move}_d(C,b) \in B_{212}$, $B_1 = \{D\}$ e $B_{211} = \{A\}$ e $B_{212} = \{sink\}$ e $B_{221} = \{B\}$ e $B_{222} = \{C\}$.
+Risulta che il DFA è già minimizzato.
+### Dimensioni di un DFA
+#### Lemma
+$\forall n \in \mathbb{N}^+$ esiste un NFA con $n+1$ stati il cui DFA minimo ha almeno $2^n$ stati e una funzione di transizione totale.
+#### Dimostrazione
+Prendiamo il il linguaggio $L=((a|b)^* a (a|b)^{n-1})$, allora ci sarà un NFA che accetta $L$ con almeno $n+1$ stati.
+
+![dim-number-states](./img/03/dim-n-states.png)
+
+Allora per contraddizione, poniamo esista un DFA $\mathcal{D}$ che accetta $L$ e ha $k < 2^n$ stati.
+Sappiamo che nel linguaggio $L$ ci sono esattamente $2^n$ parole distinte con la lunghezza $n$.
+Allora ci sono due percorsi in $\mathcal{D}$ tali che:
+* La lunghezza è $n$.
+* Compongono rispettivamente $w_1$ e $w_2$ con $w_1 \neq w_2$.
+* Condividono almeno un nodo.
+Allora per degli stati $x_1, x_2$ e  $x$; ho due possibilità mutualmente esclusive.
+* $w_1 = x_1 a x$ e $w_2 = x_2 b x$
+* $w_1 = x_1 b x$ e $w_2 = x_2 a x$
+Possiamo supporre senza problemi che $w_1 = x_1 a x$ e $w_2 = x_2 b x$.
+Allora possiamo definire $w^\prime_1 = x_1 a b^{n-1} \in L$, lo stato che raggiunge $w^\prime_1$ in $\mathcal{D}$ è finale.
+Ma allora ho una contraddizione perchè lo stato non può essere finale visto che è raggiunto anche da $x_2bb^{n-1} \notin L(\mathcal{D})$.
+## Pumping lemma per linguaggi regolari
+### Lemma
+Sia $L$ un linguaggio regolare, allora:
+* $\exists p \in \mathbb{N}^+$
+* $\forall z \in L$ tale che $|z| > p$
+* $\exists u,v,w$ tali che:
+	* $z = uvw \ \land$
+	* $|uv| \leq p \ \land$
+	* $|v| > 0 \ \land$
+	* $\forall i \in \mathbb{N}. uv^iw \in L$
+### Dimostrazione
+Sia $L$ un linguaggio regolare, allora esiste un DFA $\mathcal{D} = (S, \mathcal{A}, \text{move}_n, s_0, F)$ tale che $L = L(\mathcal{D})$.
+Sia $p = |S| - 1$, allora tutti i cammini da $s_0$ a qualche stato finale che attraversano al più una volta ogni stato hanno lunghezza limitata da $p$.
+Allora per una parola $z$ vale $|z| > p$, allora possiampo scomporre $z$ in $z = a_1 \dots a_p z^\prime$ e siamo sicuri che almeno uno stato, chiamiamolo $s^*$, è stato attraversato più di una volta durante $a_1 \dots a_p$.
+Questo implica che esiste un ciclo in $\mathcal{D}$ che parte da $s^*$ e torna in $s^*$, questo ciclo può essere indicato come $a_{i+1} \dots a_j$ con $i  < j \leq p$.
+Possiamo ora scomporre la parola in:
+* $u = a_1 \dots a_i$
+* $v = a_{i+1} \dots a_j$ (sarebbe il ciclo, ovvero il termine pompabile)
+* $w = \begin{cases} z^\prime & j = p\\ a_{j+1} \dots a_p z^\prime & j < p \end{cases}$
+Possiamo quindi dire che $|uv| \leq p$ e che $|v| > p$ perchè per definizione un ciclo tocca almeno un nodo, ed essendo quindi un ciclo può essere ripetuto un numero indefinito di volte mantenendo comunque $\forall i \in \mathbb{N} . uv^iw \in L(\mathcal{D})$.
+### Applicazioni del pumping lemma
+Mostra per contraddizione che un linguaggio non è regolare.
+* Assumiamo il linguaggio regolare.
+* Mostriamo che not(Thesis) è vera.
+	* **Thesis:** $\exists p \in \mathbb{N}^+ . \forall z \in L : |z| > p . \exists u,v,w . P$
+	  Dove
+	  $P \equiv (z = uvw \land |uv|\leq p \land |v| > 0 \land \forall i \in \mathbb{N} . uv^iw \in L)$
+	* **not(Thesis):** $\forall p \in \mathbb{N}^+ . \exists z \in L : |z| > p . \forall u,v,w . Q$
+	  Dove
+	  $Q \equiv (z = uvw \land |uv| \leq p \land |v| > 0)$ implica che $(\exists i \in \mathbb{N} . uv^iw \notin L)$
+#### Esempio
+Proviamo a dimostrare che $L = \{a^nb^n | n > 0\}$ non è regolare.
+Assumiamo che $L$ sia regolare e prendiamo la parola $z = a^p b^p$, partizioniamo ora i termini come segue $u = a_1 \dots a_x$, $v = a_{x+1} \dots a_p$ e infine $w = b_1 \dots b_p$.
+Il partizionamento scelto rispetta i vincoli dell'ipotesi perchè:
+* $|uv| \leq p$ contenendo solo $a$.
+* $|v| > 0$ perchè $v$ contiene almeno un'occorenza di $a$.
+Possiamo ora scegliere $i = 0$ e vedere che la parola diventa $uv^0w = a^xb^p$ con $x < p$, abbiamo quindi dimostrato che $uv^0w \notin L$ e quindi il linguaggio non è regolare.
+## Chiusure dei linguaggi regolari
+### Unione
+Questa proprietà è visibile graficamente tamite l'algoritmo di Thompson, basta prendere gli automi per i due linguaggi e fare l'*alternanza*.
+### Concatenazione
+Anche per questa chiusura è possibile costruire un NFA che accetti il nuovo linguaggio usando le regole Thompson.
+### Complementazione
+Prendiamo il linguaggio $L$ su un certo alfabeto $\mathcal{A}$, allora il complementare del linguaggio è dato da $\mathcal{A} \backslash L$ ed è sicuramente (non ho trovato una dimostrazione).
+### Intersezione
+Per dimostrarla possiamo ricondurci al caso dell'unione con *De Morgan*.
+$$L_1 \cap L_2 = \lnot (\lnot (L_1 \cap L_2)) = \lnot (\lnot L_1 \cup \lnot L_2)$$
+Ora avendo detto che l'unione ed la complementazione di due linguaggi regolari $L_{1,2}$ è regolare lo è qnche la sua intersezione.
+## Analisi lessicale
+In questa fase vogliamo identificare quali parti del nostro codice corrispondono alle *keyword*, tipo identificatori, operatori, ecc...
+Gli elementi che vogliamo riconoscere prendono il nome di *lessemi* ed il nostro obbiettivo è trasformarli in un flusso di token che andranno a costruire i terminali della nostra grammatica.
+Tpicamente esistono token univoci:
+* per ogni keyword tipo `for`, `while`, ecc...
+* per ogni operatore, infatti in C `+` e `++` hanno token diversi
+* un token univoco per tutti gli identificatiori
+* un token per ogni segno di punteggiatura
+### Obbiettivo
+L'obbiettivo dell'analizzatore lessicale è riconoscere i *lessemi*, ovvero quelle porzioni di codice che corrispondono ai vari token e ritornarli.
+Tipicamente vengono ritornati delle tuple, solitamente \<token-nome\> oppure \<token-valore\>:
+* \<token-nome\> è il nome scelto per indicare quello specifico token.
+* \<token-valore\> è un puntatore alla symbol tabel che contiene le informazioni di quel token.
+### Lessemi
+Sono descritti da regex e vengono riconosciuti da un automa a stati che esegue istruzioni specifiche quando riconosce una parola.
+
+![lexemes-automa](./img/03/lexemes-automata.png)
+
+### Pattern matching basato su NFAs
+Viene simulato un NFA i cui stati finali sono associati a delle azioni.
+1. Simuliamo l'NFA.
+2. Continuiamo la smiluazione finchè nessun'altra azione è possibile, ovvero per *longest match*.
+3. Se nell'insieme di stati in cui siamo ci sono delle azioni le eseguiamo, eseguiamo le istruzioni dalla prima all'ultima, in caso di parità ci sono delle priorità d rispettare.
+4. Se invece non ci sono azioni dobbiamo tornare indietro nella simulazione fino a trovare un'insieme di stati valido con azioni.
+   Nel nostro andare indietro dobbiamo ricordarci di far scorrere il puntatore al buffer di input.
+Possiamo fare il pattern matching anche su DFAs, basta tradurre e semplificare il nostro NFA.
