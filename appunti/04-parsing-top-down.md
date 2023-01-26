@@ -320,6 +320,6 @@ Vediamo come possiamo sostiutire in $S^\prime$ due valori diversi ma la parole r
 Se una grammatica è LL(1) allora non può essere ricorsiva a sinistra $\lor$ fattorizzabile a sinistra $\lor$ ambigua.
 Possiamo quindi enunciare un lemma findamentale.
 ### Lemma
-$\mathcal{G}$ è una grammatica LL(1) se e solo se, nel caso in cui $\mathcal{G}$ abbia solo produzioni della forma $A \to \alpha | \beta$ allora:
+$\mathcal{G}$ è una grammatica LL(1) se e solo se, nel caso in cui $\mathcal{G}$ abbia produzioni della forma $A \to \alpha | \beta$ allora:
 * $first(\alpha) \cap first(\beta) \neq \emptyset$
 * se $\varepsilon \in first(\alpha)$ allora $first(\beta) \cap follow(A) = \emptyset$ e *viceversa*, se se $\varepsilon \in first(\beta)$ allora $first(\alpha) \cap follow(A) = \emptyset$
