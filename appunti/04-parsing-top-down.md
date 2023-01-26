@@ -294,3 +294,32 @@ L'algoritmo viene tradotto in una serie di 3 passi da eseguire in modo sequenziq
 	   $$\begin{cases}A \to \alpha A^\prime | \gamma_1 | \dots | \gamma_n \\ A^\prime \to \beta_1 | \dots | \beta_n\end{cases}$$
 3. Ripetiamo idal punto 1 finchè non troviampo più prefissi comnuni $\alpha$.
 ### Efficacia fattorizzazione a sinistra
+Prendiamo in esame una nuova grammatica ambigua, molto famosa nei linguaggi di programmazione, ovvero la grammatica dei *dandling else*.
+$$\mathcal{G} : S \to if \ b \ then \ S | if \ b \ then \ S \ else \ S | c$$
+Possiamo notare che è presente un'ambiguità in $if \ b \ then \ if \ b \ then \ c \ else \ c$:
+* $S \implies if \ b \ then \ S \implies if  \ b \ then \ if \ b \ then \ S \ else \ S \implies if \ b \ then \ if \ b \ then \ c \ else \ c$
+* $S \implies if \ b \ then \ S \ else \ S \implies if \ b \ then \ if \ b \ then \ S \ else \ S \implies if \ b \ then \ if \ b \ then \ c \ else \ S\implies if \ b \ then \ if \ b \ then \ c \ else \ c$
+In partica l'ambiguità è nel non sapere a che $if$ è assocuiato l'$else$.
+Questa grammatica può essere fattorizzata a sinistra, fattoriziamola in $\mathcal{G}^\prime$.
+$$\mathcal{G}^\prime : \begin{cases} S \to if \ b \ then SS^\prime | c \\ S^\prime \to else \ S | \varepsilon \end{cases}$$
+Ora calcoliamo $first$ e $follow$:
+* $first(S) = \{if \ b \ then,c\}$
+* $first(S^\prime) = \{else, \varepsilon\}$
+* $follow(S) = \{\$, else\}$
+* $follow(S^\prime) = \{\$, else\}$
+Possiamo subito notare che $\varepsilon \in first(S^\prime)$ e $follow(S^\prime) \cap first(S^\prime) \neq \emptyset$, quindi possiamo dedurre che non è LL(1).
+Possiamo anche notare che l'ambiguità rimane per via di una nuova "fallacia" introdotta da $\varepsilon$, vediamo in modo grafico con un albero di derivazione.
+
+![dandling-else](./img/04/dandling-else-ambiguity.png)
+
+Vediamo come possiamo sostiutire in $S^\prime$ due valori diversi ma la parole rimane invariata.
+* In quello a cercho $S^\prime \implies \varepsilon$ e in quello a quadrato $S^\prime \implies else \ S$
+* In quello a quadrato $S^\prime \implies \varepsilon$ e in quello a cerchio $S^\prime \implies else \ S$
+**Concludiamo** che pur applicando la fattorizzazione a sinistra non è detto che una grammatica diventi LL(1) e che sia rimossa la sua ambiguità.
+## Conclusioni
+Se una grammatica è LL(1) allora non può essere ricorsiva a sinistra $\lor$ fattorizzabile a sinistra $\lor$ ambigua.
+Possiamo quindi enunciare un lemma findamentale.
+### Lemma
+$\mathcal{G}$ è una grammatica LL(1) se e solo se, nel caso in cui $\mathcal{G}$ abbia solo produzioni della forma $A \to \alpha | \beta$ allora:
+* $first(\alpha) \cap first(\beta) \neq \emptyset$
+* se $\varepsilon \in first(\alpha)$ allora $first(\beta) \cap follow(A) = \emptyset$ e *viceversa*, se se $\varepsilon \in first(\beta)$ allora $first(\alpha) \cap follow(A) = \emptyset$
