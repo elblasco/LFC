@@ -200,3 +200,97 @@ $follow(F) = \{+, ∗, )\}$
 | T |  |  | $T \to T *F$, $T \to F$ |   | $T \to T * F$, $T \to F$ |  |
 | F |  |  | $F \to ( E )$ |  | $F \to id$ |  |
 In questo caso viene meno il determinismo per via delle *entry multiple-defined*, ce se saremmo potuti accorgere quando abbiamo calcolati i $first$ e fermarci subito.
+## Risorsione a sinistra
+Una grammatica si dice ricorsiva a sinistra se per qualche $A$ e qualche $\alpha$ abbiamo che $A \implies ^* \alpha$.
+Prendiamo ora in esempio la grammatica:
+$$\begin{cases} S \to B|a \\ B \to Sa|b \end{cases}$$
+Abbiamo una ricorsione a sinistra per via di $A \implies B \implies Sa$.
+### Lemma
+Una grammatica $\mathcal{G}$ con ricorsione a sinistra non può essere LL(1).
+### Ricorsione immediata
+Una grammatica ha ricorsione immediata se ha una o più produzioni del tipo $A \to A \alpha$.
+Prendiamo allora una produzione del tipo $A \to A \alpha | \beta$ con $\alpha \neq \varepsilon \land \beta \neq A \gamma$.
+Abbiamo quindi bisogno di un nuovo non terminale, chiamiamolo $A^\prime$, la grammatica diventerà così:
+$$\begin{cases} A \to \beta \\ A^\prime \to \alpha A^\prime | \varepsilon\end{cases}$$
+#### Caso generale
+Dobbiamo ora pensare che la ricorsione immediata può avere $n$ produzioni quindi dobbiamo generalizzare.
+Consideriamo la produzione:
+$$A \to A\alpha_1 | \dots | A \alpha_n | \beta_1 | \dots | \beta_k$$
+Con $\alpha_j \neq \varepsilon$ $\forall j : 1 \leq j \leq n$ e anche $\beta_i \neq A \gamma_i$ $\forall i : 1 \leq i \leq k$, allora la possiamo trasformare in:
+$$\begin{cases} A \to \beta_1 A^\prime | \dots | \beta_k A^\prime \\ A^\prime \to \alpha_1 A^\prime | \dots | \alpha_n A^\prime | \varepsilon\end{cases}$$
+Con $A^\prime \notin \mathcal{A} \backslash T$ ovvero un non-terminale *fresh*.
+### Ricorsione non immediata
+Facciamo ora un passo in più, ovvero in cui non basta una derivazione per avere la ricorsione a sinistra, ma ce ne possono volere anche $n$.
+L'idea è di ridurre gli step di derivazione e riportarci a dei casi in cui la ricorsione a sinistra è immediata, prendiamo quindi la grammatica:
+$$\begin{cases} A \to Ba | b \\ B \to Bc | Ad | b \end{cases}$$
+Notiamo che abbiamo già dei casi di ricorsione immediata ma ci manca $B \to Ad$, osserviamo quindi che $A \to Ba | b$ quindi sostituendo nella produzione precedente:
+$$\begin{cases} A \to Ba | b \\ B \to Bc | Bad | bd | b \end{cases}$$
+Ora abbiamo $B$ che è immediatamente ricorsivo a sinistra e quindi basta applicare il metodo visto prima, la grammatica finale risulterà:
+$$\begin{cases} A \to Ba | b \\ B \to bdB^\prime | bB^\prime \\ B^\prime \to cB^\prime | adB^\prime | \varepsilon \end{cases}$$
+### Efficacia rimozione ricorsione
+Abbiamo detto che una grammatica con ricorsione a sinistra (immediata o no) non può essere LL(1), vediamo quindi se eliminando la ricorsione una grammatica diventa per forza LL(1).
+Prendimamo la fantomatica grammatica non ambigua delle espressioni aritmetiche:
+$$\mathcal{G}: \begin{cases} E \to E + T | T \\ T \to T * F | F \\ F \to ( E ) | id \end{cases}$$
+Elimiamo ora la ricorsione a sinistra e otteniamo una grammatica a noi nota:
+$$\mathcal{G}^\prime:\begin{cases}E \to TE^\prime \\ E^\prime \to +TE^\prime|\varepsilon \\ T \to FT^\prime \\ T^\prime \to *FT^\prime|\varepsilon \\ F \to (E)|id \end{cases}$$
+Sappiamo che $\mathcal{G}^\prime$ è una grammatica LL(1), ma ciò non implica he la rimozione della ricorsione renda tutte le grammatiche LL(1).
+Prendiamo quindi la grammatica $\mathcal{G}$ ambigua delle espressioni arimetiche:
+$$\mathcal{G} : E \to E+E | E*E | (E) | id$$
+Eliminando la ricorsione a sinistra si ottiene:
+$$\mathcal{G}^\prime:\begin{cases}E \to (E)E^\prime | idE^\prime \\ E^\prime \to +EE^\prime | *EE^\prime | \varepsilon \end{cases}$$
+Calcoliamo ora $first$ e $follow$.
+|  | $first$ | $follow$ |
+| --- | --- | --- |
+| $E$ | (, id | $, +, \*, ) |
+| $E^\prime$ | +, \*, $\varepsilon$ | $, +, \*, ) |
+Come possiamo notare $\varepsilon \in first(E^\prime)$ per cui $first(E^\prime) \cap follow(E^\prime) = \emptyset$ altrimenti avrò delle *entry multiple-defined*, in questo caso $[E^\prime, +]$ e $[E^\prime, *]$.
+**Concludiamo** quindi che eliminare la ricorsione non implica ottenere una grammatica LL(1).
+Potremmo invece chiederci se l'eliminazione della ricorsione ci ha portato ad avere una grammatica non ambigua.
+Metto gli screen altrimenti è un casino.
+
+![ambiguity-left-recuriosn](./img/04/ambiguity-left-recursion.png)
+
+Prendiamo Qesto albero di derivazione e cerchiamo con un quadrato ed un cerchio i due sotto alberi che possono generare l'ambiguità.
+
+![ambiguity-left-recursion-pt2](./img/04/ambiguity-left-recursion-pt2.png)
+
+Possiamo ora notare che possiamo scambiare i due sotto alberi avendo come radice $E^\prime$, però scambiando i due sottoalberi viene generata la stessa parola, questo da origine ad un ambiguità.
+**Concludiamo** quindi che eliminare la ricorsione non implica eliminare l'ambiguità.
+## Fattorizzazione a sinistra
+Consideriamo la grammatica $S \to aSb|ab$ che ci permette di denotare delle parentesi annidate.
+Sappiamo che questa grammatica non è LL(1).
+Questa grammatica può essere fattorizzata a sinistra, in genere una grammatica è fattorizzabile a sinistra se:
+* Almeno due produzioni hanno lo stesso driver.
+* Queste produzioni hanno lo stesso prefisso.
+### Lemma
+Se la grammatica $\mathcal{G}$ può essere fattorizzata a sinistra allora sicuramente $\mathcal{G}$ non è LL(1).
+### Stategia
+L'idea alla base è cercare di rimandare il più in la possibile la scelta delle produzioni con lo stesso prefisso.
+Quindi data una grammatica fattorizzabile $\mathcal{G}$
+$$A \to \alpha \beta_1 | \alpha \beta_2$$
+Possiamo andare a creare un nuovo non-terminale *fresh* e generare la grammatica $\mathcal{G}^\prime$ del tipo.
+$$\begin{cases} A \to \alpha A^\prime \\ A^\prime \to \beta_1 | \beta_2 \end{cases}$$
+### Algoritmo
+````
+input : Grammatica G che può essere fattorizzata
+output : Versione di G fattorizzata a sinistra
+repeat  
+	foreach A do  
+		find the longest prefix α common to 2 or more productions for A ;  
+		if α != ε then  
+			choose a fresh non-terminal A′ and replace
+				A → αβ1 | . . . | αβn | γ1 | . . . | γk by  
+			A → αA′ | γ1 | . . . | γk  
+			A′ → β1 | . . . | βn
+until no pair of productions for any A has common prefix;
+````
+L'algoritmo viene tradotto in una serie di 3 passi da eseguire in modo sequenziqle uno dopo l'altro.
+1. Troviamo un prefisso $\alpha$ il più lungo possibile che è comune a due o più produzioni aventi lo stesso driver.
+2. Se abbiamo trovato il prefisso $\alpha$ allora:
+	1. Prendiamo un nuovo non-terminale $A^\prime : A^\prime \notin \mathcal{A} \backslash T$
+	2. Sostituiamo tutte le produzioni di $A$ nella forma:
+	   $$A \to \alpha \beta_1 | \dots | \alpha \beta_n | \gamma_1 | \gamma_n$$
+	   Con le produzioni della forma:
+	   $$\begin{cases}A \to \alpha A^\prime | \gamma_1 | \dots | \gamma_n \\ A^\prime \to \beta_1 | \dots | \beta_n\end{cases}$$
+3. Ripetiamo idal punto 1 finchè non troviampo più prefissi comnuni $\alpha$.
+### Efficacia fattorizzazione a sinistra
