@@ -99,12 +99,134 @@ while ∃ P ∈ Q : p.unmarked == True do
 Piccolo inciso per introdurre un concetto che serve nelle tabelle di parsing.
 Questi automi sono più "ricchi" di informazioni di un automa LR(0), gli stati sono composti da insiemi di items LR(1).
 LR(1)-item: $[A \to \alpha \cdot \beta, \Delta]$ dove $L \subseteq T \cup \{\$\}$
-## Costruzione tabella di parsing
+La funzione di lookahead $\mathcal{LA} : P \times P \to V \cup \{\$\}$, tutto un casino la vedremo più in la.
+## Costruzione tabella di parsing LR(0)/SLR(1)/LR(1)
+### Tabella di parsing LR(0)/LR(1)
 Dobbiamo riepire una matrice $M$ nella quale le entry hammo la forma $M[P,Y]$ con $P$ uno stato e $Y$ un simbolo del vocabolario, la riempiremo con le seguenti regole:
 * Se $Y$ è un terminale e $\tau(P,Y) = Q$ inseriasco la mossa `shift Q`.
 * Se $P$ contiene una produzione del tipo $A \to \beta \cdot$
 	* Nel caso LR(0)-item $[A \to \beta \cdot]$ allora inserisco `reduce` $A \to \beta$
-	* Nel caso LR(1)-ite, $[A \to \beta \cdot, \Delta]$ inserisco la riduzione in base a cosa ho in $\Delta$ detto *Lookahead set*
+	* Nel caso LR(1)-ite, $[A \to \beta \cdot, \Delta]$ e $Y \in \mathcal{LA}(P, A \to \beta)$
 * Se $P$ contiene l'accempting item e $Y = \$$ allora inserisco `accept`
 * Se $Y$ è un terminale o $ e non vale nessuan delle precedenti inserisco `error`
 * Se $Y$ è un non-terminale e $\tau(P,Y) = Q$ inserisco `goto Q`
+### Conflitti
+La tabella può avere  *entry multipli-defined*, in questo caso si parla di conflitti:
+* **s/r conflict:** nel caso in cui almeno una entry $M[P,Y]$ contenga un'operazione `shift` e una `reduce`.
+* **r/r conflict:** nel caso in cui almeno una entry $M[P,Y]$ contenga due operazioni `reduce` distinte
+Appena verifichiamo la presenza di un conflitto possiamo dire che la nostra grammatica non è LR(0), SLR(1), LR(1) o LALR(1).
+### Tabella di parsing SLR(1)
+E' il livello di informazioni intermedio tra LR(0) e LR(1).
+Queste tabelle si ottengono prendendo:
+* Un automa caratteristico LR(0).
+* e una funzione di lookahead molto semplice $\mathcal{LA}(P,A \to \beta) = follow(A)$ per ogni $A \to \beta \cdot \in P$
+Come prima vale che una grammatica è SLR(1) se e solo se la corrispondente atbella SLR(1) non ha conflitti.
+#### Esempio
+Costruiamo la tabella di parsing SLR(1) per la seguente grammatica
+$$\begin{cases}S \to aABe \\ A \to Abc | b \\ B \to d\end{cases}$$
+Ci serve l'automa LR(0) ma lo abbiamo già da un paio di esmepi fa, aggiungiamoci però il colore verde allo stato di `accept` e marchiamo come finali gli stati dove abbiamo una `reduce`.
+
+![automa_SLR(1)](./img/05/automa-SLR(1)-ex.png)
+
+Ora dobbiamo calcolare i $follow$ e di conseguenza i $first$.
+|  | $first$ | $follow$ |
+| --- | --- | --- |
+| S | a | $ |
+| A | b | b,d | 
+| B | d | e |
+Una volta calcolati procediamo così:
+* Prendiamo tutti gli stati $P$ che contengono un reducing item $A \to \beta$, andiamo ad inserire la mossa di `reduce` nella casella $M[P,Y]$ con $Y = \mathcal{LA}(P, A \to \beta) = follow(A)$.
+* Inseriamo in $M[1,\$]$ la mossa di `accept`.
+* Inseriamo un `goto Q` in tutte le celle $M[P,Y]$ dove $Y$ è un non-terminale per il quale esiste $\tau(P,Y) = Q$.
+* Infine inseriamo `error` in tutte le altre celle.
+
+Costruiamo quindi la tabella, per indicare lo `shift` in uno stato $n$ scriveremo s$n$, per indicare il `goto` in uno stato $n$ scriveremo G$n$, per le `reduce` di una produzione $n$ scriveremo r$n$ ed infine per l'`accept` scriveremo Acc.
+
+|  | $a$ | $b$ | $c$ | $d$ | $e$ | $ | S | $A$ | $B$ |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | s2 |  |  |  |  |  | G1 |  |  |
+| 1 |  |  |  |  |  | Acc |  |  |  |
+| 2 |  | s4 |  |  |  |  |  | G3 |  |
+| 3 |  | s6 |  | s7 |  |  |  |  | G5 |
+| 4 |  | r3 |  | r3 |  |  |  |  |  |
+| 5 |  |  |  |  | s8 |  |  |  |  |
+| 6 |  |  | s9 |  |  |  |  |  |  |
+| 7 |  |  |  |  | r4 |  |  |  |  |
+| 8 |  |  |  |  |  | r1 |  |  |  |
+| 9 |  | r2 |  | r2 |  |  |  |  |  |
+## Shift/reduce parsing
+* **Input:** una stringa $w$ ed una tabella di parsing $M$ per la grammatica $\mathcal{G} = \{V, T, S, P\}$.
+* **Output:** la derivazione rightmost di $w$ in ordine inverso se $w \in L(\mathcal{G})$ altrimenti `error`.
+* **Inizializzazione:** 
+	* $P_0$ nello state-stack stSt.
+	* nulla sullo symbol-stack symSt.
+	* $w\$$ nel buffer di input.
+### Algoritmo
+````
+b = input_buffer[0];
+stSt.push(0);
+while true do
+	S = stSt.top();
+	if M[S,b] = “Shift T” then
+		symSt.push(b);
+		stSt.push(T);
+		b = input_buffer.nextChar();
+	else if M[S,b] = “Reduce A → β” then
+		for i = 1; i <= |β|; ++i; do
+			symSt.pop();
+		symSt.push(A);
+		for i = 1; i <= |β|; ++i; do
+			stSt.pop();
+		tmp = stSt.top();
+		stSt.push(T); where T is such that M[temp, A] = “Goto T ”;
+		output “A → β”;
+	else if M[S, b] = “Accept” then
+		return;
+	else
+		error();
+````
+### Esempio
+Troppo lungo da scrivere fanculo, non è difficile da capire.
+## Caso studio SLR(1)
+Proviamo a costruire la tabella di parsing SLR(1) per la grammatica:
+$$E \to E+E | E*E | id$$
+Aggiungiamo la produzione $E^\prime \to E$ e iniziamo con la costruzione dei vari stati.
+* Stato 0:
+	* Kernel: $\{E^\prime \to \cdot E\}$
+	* Corpo: $\{E \to \cdot E+E, \ E \to \cdot E*E, \ E \to \cdot id\}$
+* $\tau(0,E)$ e definisco lo stato 1:
+	* Kernel: $\{E^\prime \to E \cdot, \ E \to E \cdot +E, \ E \to E \cdot *E\}$
+* $\tau(0,id)$ e definisco lo stato 2:
+	* Kernel: $\{E \to id \cdot\}$
+* $\tau(1,+)$ e definisco lo stato 3:
+	* Kernel: $\{E \to E+ \cdot E\}$
+	* Corpo: $\{E \to \cdot E+E, \ E \to \cdot E*E, \ E \to \cdot id\}$
+* $\tau(1,*)$ e definisco lo stato 4:
+	* Kernel: $\{E \to E* \cdot E\}$
+	* Corspo: $\{E \to \cdot E+E, \ E \to \cdot E*E, \ E \to \cdot id\}$
+* $\tau(3,E)$ e definisco lo stato 5:
+	* Kernel: $\{E \to E+E \cdot, \ E \to E \cdot +E, \ E \to E \cdot *E\}$
+* $\tau(4,E)$ e definisco lo stato 6:
+	* Kernel: $\{E \to E+E \cdot, \ E \to E \cdot +E, \ E \to E \cdot *E\}$
+* $\tau(3,id) = 2$
+* $\tau(4,id) = 2$
+* $\tau(5,+) = 3$
+* $\tau(5,*) = 4$
+* $\tau(6,*) = 4$
+* $\tau(6,+) = 3$
+Possiamo quindi costruire la tabella di parsing, la rappresentazione del'automa caratteristico è opzionale.
+|  | + | * | id | $ | E |
+| --- | --- | --- | --- | --- | --- |
+| 0 |  |  | s2 |  | G1 |
+| 1 | s3 | s4 |  | Acc |  |
+| 2 | r3 | r3 |  | r3 |  |
+| 3 |  |  | s2 |  | G5 |
+| 4 |  |  | s2 |  | G6 |
+| 5 | s3, r1 | s4, r1 |  | r1 |  |
+| 6 | s3, r2 | s4, r2 |  | r2 |  |
+Abbiamo quindi dei conflitti cha vanno risolti "a mano":
+* In $M[5,+]$ tengo r1 così da avere il + associativo a sinistra.
+* In $M[5,*]$ tengo s4 così * avrà la precedenza sugli altri operatori.
+* In $M[6,+]$ tengo r2 per dare la precedenza a \*.
+* In $M[6,*]$ tengo r2  per rendere * associativo a sinistra.
+Esistono casi in cui risolvere i conflitti non è possibile, per cui abbiamo bisogno degli LR(1)-item.
