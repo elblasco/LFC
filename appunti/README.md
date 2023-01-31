@@ -1,0 +1,1 @@
+Gli errori capitano a tutti, quindi se trovate degli errori di battitura fate una PR. Grazie!

@@ -82,3 +82,26 @@ Iniziamo quindi con il dare le regole alle varie produzioni:
 Il nostro obbiettivo è implementare la traduzione della parola durante il processo di parsing anzichè ottere il parsing tree poi annotarlo poi valutarlo.
 Il caso più semplice in cui questa elaborazione può essere fatta è durante l'algoritmo shift/reduce con un *SDD* S-attribuito.
 L'idea è quella di tenere oltre ai due stack per gli stati *stSt* e per i simboli *symSt* un ulteriore stack per gli attributi *semSt*.
+Ogni volta che faccio una uno shift (leggo una valore) faccio un push della prima istruzione e.g. `push digit.lexval` e ogni volta che faccio una riduzione faccio il `pop` dei valori nel body e poi il `push` del valore del driver.
+### Caso studio
+Pensiamo di dover tradurre un numero inserito come stringa in un intero base 10.
+Una grammatica LALR(1) molto semplice potrebbe esssere :
+$$S \to Digits \hspace{2em} \{print(D.val)\}$$
+$$Digits \to Digits_1 d \hspace{2em} \{Digits.val = Digits_1.val*10+d.lexval\}$$
+$$Digits \to d \hspace {2em} \{Digits.val = d.lexval\}$$
+Notiamo che l'*SDD* è S-attribuito quindi l'albero è valutabile e siamo apposto.
+Aggiungiamo ora un livello di difficoltà, diciamo che se la stringa è preceduta dal terminale $o$ allora dobbiamo tradurre il numero in base 8. (La Quaglia ha un concetto strano di base 8)
+Praticamente se abbiamo la $o$ dobbiamo moltiplicare per 8.
+Andiamo a tentativi pe vedere di trovare uina grammatica buona.
+1. $$\begin{cases} S \to Num \\ Num \to o\ Digits | Digits \\ Digits \to Digits\ d | d \end{cases}$$
+   Per essere sicuri di poter valutare l'albero gli attributi devono essere sintetizzati.
+   Ma in questo caso non è possibile perchè noi prima facciamo prima una riduzione $Digits \to d$ e poi tutte le riduzioni $Digits \to Digist\ d$, quindi non sappiamo ancora fino all'ultima riduzione $Num \to o\ Digits | Digits$ la base in cui convertire, unlucky.
+2. Proviamo con la grammtica:
+   $$\begin{cases} S \to Num & \{print(Num.v)\} \\ Num \to oO & \{Num.v = O.v\} \\ Num \to D & \{Num.v = D.v\} \\ O \to O_1 d & \{O.v = O_1.v * 8 + d.lexval\} \\ O \to d & \{O.v = d.lexval\} \\ D \to D_1 d & \{D.v = D_1.v ∗ 10 + d.lexval\} \\ D \to d & \{D.v = d.lexval\} \end{cases}$$
+   Buona per attributi sintetizzati e LALR(1) ma c'è troppa ridondanza.
+3. Proviamo quindi a sfoltire un po' la grammatica:
+   $$\begin{cases} S \to Num & \{print(Num.v)\} \\ Num \to Octal\ Digits & \{Num.v = Digits.v\} \\ Num \to Decimal\ Digits & \{Num.v = Digits.v\} \\ Octal \to o & \{base = 8\} \\ Decimal \to \varepsilon & \{base = 10\} \\ Digits \to Digits_1\ d & \{D.v = D1.v * base + d.lexval\} \\ Digits \to d & \{Digits.v = d.lexval\} \end{cases}$$
+   Abbiamo anora margine di miglioramento perchè stiamo usando una variabile globale `base`, come in programmazione usiamo il meno possibile delle variabili globali.
+4. Proviamo quindi a unire il terminale che gestisce le basi, così che ne venga subito fatta una riduzione.
+   $$\begin{cases}S \to D & \{print(D.v)\} \\ D \to D_1\ d & \{D.v = D1.v * D_1.base + d.lexval; \hspace{0.5em} D.base = D_1.base\} \\ D \to B\ d & \{D.v = d.lexval; \hspace{0.5em} D.base = B.val\} \\ B \to o & \{B.val = 8\} \\ B \to \varepsilon & \{B.val = 10\} \end{cases}$$
+   questo sembra un buon compromesso perchè se parsiamo la stringa $o d d$ la prima cosa che facciamo è leggere $o$ e ridurlo in $B$ quindi sappiamo la bae, se invece abbiamo una parola tipo $d d$ vuol dire che faremo la riduzione $B \to \varepsilon$ e quindi sappiamo che la base è 10.
