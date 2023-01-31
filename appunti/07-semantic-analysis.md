@@ -105,3 +105,76 @@ Andiamo a tentativi pe vedere di trovare uina grammatica buona.
 4. Proviamo quindi a unire il terminale che gestisce le basi, così che ne venga subito fatta una riduzione.
    $$\begin{cases}S \to D & \{print(D.v)\} \\ D \to D_1\ d & \{D.v = D1.v * D_1.base + d.lexval; \hspace{0.5em} D.base = D_1.base\} \\ D \to B\ d & \{D.v = d.lexval; \hspace{0.5em} D.base = B.val\} \\ B \to o & \{B.val = 8\} \\ B \to \varepsilon & \{B.val = 10\} \end{cases}$$
    questo sembra un buon compromesso perchè se parsiamo la stringa $o d d$ la prima cosa che facciamo è leggere $o$ e ridurlo in $B$ quindi sappiamo la bae, se invece abbiamo una parola tipo $d d$ vuol dire che faremo la riduzione $B \to \varepsilon$ e quindi sappiamo che la base è 10.
+# Abstract syntax trees
+Una rappresentazione più compatta del *parse tree*, spesso usato come rappresentazione intermedia.
+Non esistono regole generali per costruirli ma dipende tutto dalla grammatica che andiamo ad analizzare e dalle scelte implementative.
+Devono contenere tutte le informazioni per portare avanti l'analisi.
+
+![abstract-syntax-tree](./img/07/ast.png)
+
+D'ora in poi per semplicità li chiameremo *AST*.
+## Memorizzazione di un AST
+Di fatto stiamo andando a creare in memoria un albero nel quale ogni nodo è un passaggio intermedio del processo di analisi di una parola.
+I nodi dell'*AST* sono così strutturati:
+* **Foglie:** contengono dei link alla tabella dei simboli, viene creata una foglia per ogni valore diretto (e.g. valore numero) trovato nella parola.
+* **Nodi:** sono la struttura dell'albero e rappresentano i passaggi effetuati.
+## Creazione di un AST
+Potremmo crearlo dopo aver trovato il *parse tree*, ma il nostro obbiettivo è faro mentre leggiamo la parola quindi durante il parsing.
+Dobbiamo avere una grammatica S-attribuita per poterlo fare durante l'analisi sintattica (parsing).
+Facciamo un paio di assunzioni su 2 funzioni a nostra disposizione:
+* `newLeaf(label, val)` crea una nuova foglia con due campi, la label del nodo e il valore.
+* `newNode(label, c1,....,ck)` crea un nodo interno che può avere fino a k figli, label è l'identificatore del nodo mentre i successivi argomenti sono riferimenti ai figli.
+## Esempio
+Prendiamo la grammatica LALR(1) delle espressioni aritmetiche:
+$$\begin{cases} E \to E_1+T & \{E.node = newNode('+', E_1.node, T.node)\} \\ E \to E_1-T & \{E.node = newNode('+', E_1.node, T.node)\} \\ E \to T & \{E.node = T.node\} \\ T \to (E) & \{T.node = E.node\} \\ T \to id & \{T.node = newLeaf(id,id.entry)\}\\ T \to num & \{T.node = newLeaf(num,num.lexval)\}\end{cases}$$
+Ora proviamo a fare il parsing del lessema $a-4+c$ che risulta essere $id-num+id$.
+Essendo noi dei parser umani possiamo fare le riduzioni a occhio senza la tabella di parsing:
+1. $T \to id$
+2. $E \to T$
+3. $T \to num$
+4. $E \to E-T$
+5. $T \to id$
+6. $E \to E+T$
+Ora vediamo graficamente le regole eseguite ogni riduzione:
+1. $T \to id \hspace{2em} \{T.node = newLeaf(id,id.entry)\}$
+   ![ast-ex](./img/07/ast-ex.png)
+   
+2. $E \to T \hspace{2em} \{E.node = T.node\}$
+   ![ast-ex-pt2](./img/07/ast-ex-pt2.png)
+   
+3. $T \to num \hspace{2em} \{T.node = newLeaf(num, num.lexval)\}$
+   ![ast-ex-pt3](./img/07/ast-ex-pt3.png)
+   
+4. $E \to E_1-T \hspace{2em} \{E.node = newNode('−', E_1.node,T.node)\}$
+   ![ast-ex-pt4](./img/07/ast-ex-pt4.png)
+   
+5. $T \to id \hspace{2em} \{T.node = newLeaf(id,id.entry)\}$
+   ![ast-ex-pt5](./img/07/ast-ex-pt5.png)
+
+6. $E \to E_1+T \hspace{2em} \{E.node = newNode('+', E_1.node, T.node)\}$
+   ![ast-ex-pt6](./img/07/ast-ex-pt6.png)
+
+## Abstract syntax trees per LL(1)
+Dovendo fare un parsing top-down ci conviene usare una grammatica L-attribuita, quindi possiamo avere attributi ereditati, come facciamo a costruire un *AST* per loro?
+Dobbiamo passare riferimenti ai nodi anxichè valori e fare il giro lungo, ovvero produrre il *parse tree* annotato poi definire un grafo delle dipendeze ed infine costruire l'*AST*.
+### Esempio
+$$\begin{cases} E \to TE' & \{E .node = E'.node; \hspace{0.5em} E'.i = T .node\} \\ E' \to +TE'_1 & \{E'.node = E'_1.node; \hspace{0.5em} E'_1.i = newNode('+', E'.i, T .node)\} \\ E' \to -TE'_1 & \{E'.node = E'_1.node; \hspace{0.5em} E'_1.i = newNode('-', E'.i, T .node)\}\\ E' \to \varepsilon & \{E'.node = E'.i\} \\ T \to (E) & \{T .node = E .node\} \\ T \to id & \{T .node = newLeaf(id, id.entry )\} \\ T \to num & \{T .node = newLeaf (num, num.lexval)\} \end{cases}$$
+
+Proviamo quindi a fare il parsing del lessema $a - 4$ ovvero $id - num$.
+Eseendo un parsing top-down con derivazioni leftmost le derivazioni saranno:
+$$E \implies TE^\prime \implies id E^\prime \implies id - TE^\prime \implies id - num E^\prime \implies id - num$$
+L'ordinamento topologico ci restituirà il seguente ordine di valutazione:
+//Nei passaggi successivi creeremo dei nodi in seguito ci riferiremo agli stessi nodi con le loro *label*
+
+![ast-LL(1)-ex](./img/07/ast-LL(1)-ex.png)
+
+1. id.entry (riferimento alla entry di $a$ nella *symbol table*)
+2. $T.node = newLeaf(2,id.entry)$
+vado in $E^\prime$ e valuto quello che sta sotto
+3. $num.lexval = 4$
+4. $T.node = newLeaf(4,num.lexval)$
+5. Sfruttiamo $E^\prime.i = T.node = 2$ della produzione $E \to TE^\prime$ per portarci il numero contenuti in $id$.
+6. Ora possiamo scendere in con $E'_1.i = newNode('-', 2, 4)$ nel punto 6.
+7. Fortunatamente abbiamo una produzione che va in $\varepsilon$ quindi creaiamo un riferiemento al nodo della sottrazione con $E^\prime.node = E^\prime.i$
+8. Creiamo un altro riferimento al nodo della sottrazione con $E^\prime.node = E^\prime_1.node$ della produzione $E^\prime \to -TE^\prime_1$
+9. Finico di risalire l'albero creando un riferimento allo stesso nodo con $E.node = E^\prime.node$ della prima produzione.
