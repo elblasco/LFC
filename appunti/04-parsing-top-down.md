@@ -80,7 +80,7 @@ Set first(Y1 . . . Yn) = ∅;
 j = 1;
 n = strlen(w);
 while j ≤ n do  
-	first(Y1 . . . Yn).add(irst(Yj) \ {ε});
+	first(Y1 . . . Yn).add(first(Yj) \ {ε});
 	if ε ∈ first(Yj) then
 		j = j + 1;
 	else
