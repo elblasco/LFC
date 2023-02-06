@@ -415,7 +415,7 @@ Questa proprietà è visibile graficamente tamite l'algoritmo di Thompson, basta
 ### Concatenazione
 Anche per questa chiusura è possibile costruire un NFA che accetti il nuovo linguaggio usando le regole Thompson.
 ### Complementazione
-Prendiamo il linguaggio $L$ su un certo alfabeto $\mathcal{A}$, allora il complementare del linguaggio è dato da $\mathcal{A} \backslash L$ ed è sicuramente (non ho trovato una dimostrazione).
+Prendiamo il linguaggio $L$ su un certo alfabeto $\mathcal{A}$, allora il complementare del linguaggio è dato da $\mathcal{A} \backslash L$ ed è sicuramente regolare (non ho trovato una dimostrazione).
 ### Intersezione
 Per dimostrarla possiamo ricondurci al caso dell'unione con *De Morgan*.
 $$L_1 \cap L_2 = \lnot (\lnot (L_1 \cap L_2)) = \lnot (\lnot L_1 \cup \lnot L_2)$$
