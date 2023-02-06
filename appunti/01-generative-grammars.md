@@ -8,14 +8,14 @@
   Dobbiamo rispettare delle regole, per esempio la stringa da rimpiazzare deve contenere almeno un non terminale.
   E. g. {S $\to$ aSb, S $\to$ ab} 
 ## Linguaggio
-E' un insieme di parole composte da non terminali che possono essere generate partendo dallo *start symbol* applicando x volte e in y modi diversi le regole di derivazione.
+E' un insieme di parole composte da non terminali che possono essere generate partendo dallo *start symbol* applicando x volte e in y modi diversi le regole di derivazione.  
 Ogni riscritttura viene detta *derivation step*.
 ### Esempio
-Data la grammatrica {S $\to$ aSb, S $\to$ ab} possiamo compiere un paio di passi di derivazione.
-S $\implies$ aSb $\implies$ aabb ; con due passi abbiamo ottenuto una parole che appartiene al linguaggio.
-S $\implies$ aSb $\implies$ aaSbb $\implies$ aaabbb ; con tre passi abbiamo ottenuto una parola valida.
+Data la grammatrica {S $\to$ aSb, S $\to$ ab} possiamo compiere un paio di passi di derivazione.  
+S $\implies$ aSb $\implies$ aabb ; con due passi abbiamo ottenuto una parole che appartiene al linguaggio.  
+S $\implies$ aSb $\implies$ aaSbb $\implies$ aaabbb ; con tre passi abbiamo ottenuto una parola valida.  
 Possiamo concludere che il linguaggio generato dalla grammatica ha la forma {a$^n$ b$^n$ | n>0 },
-### Comvenzioni sulla $\varepsilon$
+### Convenzioni sulla $\varepsilon$
 Usiamo il carattere speciale $\varepsilon$ per denotare la parola vuota, ha le seguenti proprietà:
 * $\varepsilon \equiv \varepsilon \varepsilon$
 * $\varepsilon \equiv$b$^n$ per ogni terminale b
@@ -36,7 +36,7 @@ S $\implies$ AB $\implies$ aAB $\implies$ aaB $\implies$ aab
 Genera il linguaggio {a$^n$ b$^m$ | n,m>0}
 ### Esempio
 S $\to$ AB  
-A $\to$ a
+A $\to$ a  
 
 S $\implies$ AB $\implies$ aB
 Quindi non arrivo mai ad una parola priva di non terminali per cui il lingiaggio generato è $\emptyset$
@@ -45,7 +45,7 @@ S $\to \varepsilon$
 
 Viene generato il linguaggio {$\varepsilon$} che è $\neq \emptyset$
 ### Esempio
-S $\to$ aSb  
+S $\to$ aSb   
 S $\to \varepsilon$ 
 
 Genera il linguaggio {a$^n$ b$^n$ | n>0} $\cup$ {$\varepsilon$} = {a$^n$ b$^n$ | n $\geq$ 0} 
@@ -70,7 +70,7 @@ Una grammatica è una tupla (V, T, S, P)
 * **Linguaggio generato:** L(G) = {$w | w \in T^*\ and\ S \implies w$}
 	  Usiamo $T^*$ perchè la parola $w$ potrebbe essere solo $\varepsilon$ 
 ## Gerarchia delle grammatiche
-Dipendono dalla forma delle produzioni.
+Dipendono dalla forma delle produzioni.  
 Passiamo ora a vedere alcuni tipi di grammatiche.
 ## Grammatiche context-free
 Le grammatiche *context-free* o *free* hanno solo produzioni della forma:
@@ -82,7 +82,7 @@ $$L=L(G)$$
 * **Rightmost/Leftmost:** rimpiazziamo il non terminale più a destra/sinistra indipendentemente dalle scelte precedenti.
 * **Canoniche:** se inizio con derivazioni rightmost continuo con esse e viceversa per leftmost.
 ## Alberi di derivazione
-I lingiaggi liberi possono essere rappresentati come un albero tale che:
+I linguaggi liberi possono essere rappresentati come un albero tale che:
 * Lo *start symbol* è la radice.
 * Per ogni passo di derivazione si aggiunge un livello.
 * La produzione $A \to X_1 X_2 \dots X_n$ genera i nodi figli $X_1 X_2 \dots X_n$ che partono dal nodo $A$.
