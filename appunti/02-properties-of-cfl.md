@@ -15,7 +15,7 @@ Però perchè $G_3$ è libero?
 Prendiamo le produzioni di $G_3 \in \{ P_1 \cup P^\prime_2 \cup \{S \to S_1 | S^\prime_2\}\}$, allora quelle in $P_1$ e $P^\prime_2$ hanno la stessa forma che avevano prima del refreshing dei nomi, $A \to \alpha$.  
 Di coneguenza le produzioni $S_3 \to S_1$ e $S_3\to S^\prime_2$ hanno la forma $A \to \alpha$.
 
-Ci rimane da dimostrare perchè $L(G_3) = L(G_1) \cup L(G_2)$?
+Ci rimane da dimostrare perchè $L(G_3) = L(G_1) \cup L(G_2)$?  
 Poniamo $w \in L(G_3)$ che può esistere se e solo se $S \implies w$ oppure:
 $$S \implies S_1 \implies^* w \hspace{3em} \text{oppure} \hspace{3em} S \implies S^\prime_2 \implies^* w$$
 Quindi $$w \in L(G_1) \hspace{3em} \text{oppure} \hspace{3em} w \in L(G_2)$$
@@ -24,7 +24,7 @@ $$w \in L(G_1) \cup L(G_2)$$
 ### Esempio
 $$G_1: \begin{cases} S_1 \to aA \\ A \to a \end{cases}$$
 $$G_2: \begin{cases} S_2 \to bA \\ A \to b \end{cases}$$
-Allora $L(G_1)=\{aa\}$ e $L(G_2)=\{bb\}$.
+Allora $L(G_1)=\{aa\}$ e $L(G_2)=\{bb\}$.  
 Facendo il *name refresh* di $G_2$, $A$ diventa $A^\prime$, posso quindi creare l'unione delle grammatiche. 
 $$G_3: \begin{cases} S \to S_1|S_2\\ S_1 \to aA\\ S_2 \to bA^\prime\\ A \to a\\ A^\prime \to b \end{cases}$$
 Possiamo ora vedere che $L(G_3) = \{aa,\ bb\} = \{aa\} \cup \{bb\} = L(G_1) \cup L(G_2)$ .
@@ -32,9 +32,9 @@ Possiamo ora vedere che $L(G_3) = \{aa,\ bb\} = \{aa\} \cup \{bb\} = L(G_1) \cup
 ### Lemma
 La classe dei linguaggi liberi è chiusa rispetto alla concatenazione, quindi se $L_1$ e $L_2$ sono linguaggi liberi allora $\{w_1 w_2 | w_1 \in L_1 \land w_2 \in L_2\}$ è un linguaggio libero.
 ### Dimostrazione
-Siano $L_1$ e $L_2$ due linguaggi liberi, allora esistono due grammatiche $G_1 = (V_1, T_1, S_1, P_1)$ e $G_2 = (V_2, T_2, S_2, P_2)$ tali che $L_1 = L(G_1)$ e $L_2 = (G_2)$.
-Senza perdere generalità possiamo affermare che non ci siano *name clash* tra i non terminali di $G_1$ e quelli di $G_2$, se fosse necessario possiamo comunque fare un *name refresh*.
-Sia allora $G_3 = (V_1 \cup V_2 \cup \{S\}, T_1 \cup T_2, S, P_1 \cup P_2 \cup \{ S \to S_1 S_2 \})$ con $S$ un nuovo simbolo non in $V_1 \cup V_2$.
+Siano $L_1$ e $L_2$ due linguaggi liberi, allora esistono due grammatiche $G_1 = (V_1, T_1, S_1, P_1)$ e $G_2 = (V_2, T_2, S_2, P_2)$ tali che $L_1 = L(G_1)$ e $L_2 = (G_2)$.  
+Senza perdere generalità possiamo affermare che non ci siano *name clash* tra i non terminali di $G_1$ e quelli di $G_2$, se fosse necessario possiamo comunque fare un *name refresh*.  
+Sia allora $G_3 = (V_1 \cup V_2 \cup \{S\}, T_1 \cup T_2, S, P_1 \cup P_2 \cup \{ S \to S_1 S_2 \})$ con $S$ un nuovo simbolo non in $V_1 \cup V_2$.  
 Allora $L(G_3)$ è libero $L(G_3) = \{w_1 w_2\ |\ w_1 \in L(G_1) \land w_2 \in L(G_2)\}$.
 ## Chomsky Normal Form
 Una grammatica $G$ è in Chomsky Normal Form se e solo se:
@@ -54,7 +54,7 @@ Ogni produzione $A \to \beta$ in $G$ è tale che o $\beta$ è un singolo termina
 ### Eliminazione delle $\varepsilon$-produzioni
 * Trovare tutti i non-terminali *nullable*, ovvero tali che $A \implies^* \varepsilon$
 	* **Base:** se $A \to \varepsilon$ è una produzione, allora $A$ è *nullable*.
-	* **Iterazione:** se $A \to Y_1 Y_2 \dots Y_n$ è una produzione e $Y_1 Y_2 \dots Y_n$ è *nullable* allor anche A lo è.
+	* **Iterazione:** se $A \to Y_1 Y_2 \dots Y_n$ è una produzione e $Y_1 Y_2 \dots Y_n$ è *nullable* allora anche A lo è.
 * Sostituire ogni produzione $A \to Y_1 Y_2 \dots Y_n$ con una serie di produzioni dove le combinazioni *nullable* di $Y_i$ sono rimosse dal body della produzione.
 * Eliminare le produzioni $A \to \varepsilon$.
 #### Esempio
@@ -83,19 +83,23 @@ Sia $L$ un linguaggio libero, allora:
 	* $|vx| > 0 \ \land$
 	* $\forall i \in \mathbb{N} \ | \ uv^iwx^iy \in L$
 ### Dimostrazione
-Sia $L$ un linguaggio libero, il lemma vale per $p > 0$ e quindi per parole diverse da $\varepsilon$.
-Consideriamo ora la grammatica nella forma normale di Chomsky $G$ tale che $L = L(G)$.
-Così facendo nell'albero di derivazione ogni percorso dalla radice alle foglie attraversa tanti non-terminali quanti salti fa.
-Poniamo $p$ come la lunghezza della parola più lunga ottenibile dall'albero di derivazione che ha come altezza il numero di caratteri non-terminali della grammatica. 
-Poniamo quindi $z \in L$ tale che $|z| > p$, allora esiste un albero di derivazione per $z$ la cui altezza è strettamente maggiore del numero di non terminali.
-Consideriamo ora il percoso più lungo da radice a foglie e la coppia dello stesso non terminale più in profondità lungo il percorso.
-Con profondità della coppia intendiamo la profondità della seconda occorenza anadndo *bottom-up*.
+Sia $L$ un linguaggio libero, il lemma vale per $p > 0$ e quindi per parole diverse da $\varepsilon$.  
+Consideriamo ora la grammatica nella forma normale di Chomsky $G$ tale che $L = L(G)$.  
+Così facendo nell'albero di derivazione ogni percorso dalla radice alle foglie attraversa tanti non-terminali quanti salti fa.  
+Poniamo $p$ come la lunghezza della parola più lunga ottenibile dall'albero di derivazione che ha come altezza il numero di caratteri non-terminali della grammatica.  
+Poniamo quindi $z \in L$ tale che $|z| > p$, allora esiste un albero di derivazione per $z$ la cui altezza è strettamente maggiore del numero di non terminali.  
+Consideriamo ora il percoso più lungo da radice a foglie e la coppia dello stesso non terminale più in profondità lungo il percorso.  
+Con profondità della coppia intendiamo la profondità della seconda occorenza andando *bottom-up*.  
 Chiamiamo $A_1$ e $A_2$ la coppia di un terminale A, allora esieteranno due diversi sotto-alberi (ricordiamo che $z = uvwxy$).
+
 ![non-terminal-couple](./img/02/non-terminal-couple.png)
+
 Vedremo ora, graficamente, che $uv^0wx^0y \in L$ e $uv^1wx^1y \in L$, quindi $\forall i \in \mathbb{N} \ | \ uv^iwx^iy \in L$.
+
 ![semi-induction-for-pumping-lemma](./img/02/semi-induction.png)
-Allora $\forall i \in \mathbb{N} \ | \ uv^iwx^iy \in L$, con $|vwx| \leq p$.
-Dalla scelta della tupla $(A_1, A_2)$ l'altezza del sotto-albero con radice $A_2$ è minore rispetto al numero di non-terminali, quindi la lunghezza è limitata superiormente da $p$.
+
+Allora $\forall i \in \mathbb{N} \ | \ uv^iwx^iy \in L$, con $|vwx| \leq p$.  
+Dalla scelta della tupla $(A_1, A_2)$ l'altezza del sotto-albero con radice $A_2$ è minore rispetto al numero di non-terminali, quindi la lunghezza è limitata superiormente da $p$.  
 $|vx| > 0$ è dato dal fatto che la grammatica $G$ è nella forma "ripulita" e se $A \implies^* \alpha A \beta$ allora almeno uno dei due simboli ($\alpha, \beta$) deve fornirne uno ulteriore.
 ### Applicazioni pumping lemma
 Questo lemma viene usato per dimostrare che un linguaggio $L$ **NON** è libero.
