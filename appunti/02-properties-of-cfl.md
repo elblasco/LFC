@@ -86,7 +86,7 @@ Sia $L$ un linguaggio libero, allora:
 Sia $L$ un linguaggio libero, il lemma vale per $p > 0$ e quindi per parole diverse da $\varepsilon$.  
 Consideriamo ora la grammatica nella forma normale di Chomsky $G$ tale che $L = L(G)$.  
 Così facendo nell'albero di derivazione ogni percorso dalla radice alle foglie attraversa tanti non-terminali quanti salti fa.  
-Poniamo $p$ come la lunghezza della parola più lunga ottenibile dall'albero di derivazione che ha come altezza il numero di caratteri non-terminali della grammatica.  
+Poniamo $p$ come la lunghezza della parola più lunga ottenibile dall'albero di derivazione che ha come altezza il numero di caratteri non-terminali della grammatica (quindi non ci sono non-terminali ripetuti).  
 Poniamo quindi $z \in L$ tale che $|z| > p$, allora esiste un albero di derivazione per $z$ la cui altezza è strettamente maggiore del numero di non terminali.  
 Consideriamo ora il percoso più lungo da radice a foglie e la coppia dello stesso non terminale più in profondità lungo il percorso.  
 Con profondità della coppia intendiamo la profondità della seconda occorenza andando *bottom-up*.  
@@ -102,7 +102,7 @@ Allora $\forall i \in \mathbb{N} \ | \ uv^iwx^iy \in L$, con $|vwx| \leq p$.
 Dalla scelta della tupla $(A_1, A_2)$ l'altezza del sotto-albero con radice $A_2$ è minore rispetto al numero di non-terminali, quindi la lunghezza è limitata superiormente da $p$.  
 $|vx| > 0$ è dato dal fatto che la grammatica $G$ è nella forma "ripulita" e se $A \implies^* \alpha A \beta$ allora almeno uno dei due simboli ($\alpha, \beta$) deve fornirne uno ulteriore.
 ### Applicazioni pumping lemma
-Questo lemma viene usato per dimostrare che un linguaggio $L$ **NON** è libero.
+Questo lemma viene usato per dimostrare che un linguaggio $L$ **NON** è libero.  
 Lo schema per la dimiostraione è il seguebte:
 * Assumiamo che il linguaggio $L$ sia libero.
 * Dimostriamo che $L$ infrange la tesi del lemma, quindi $\exists i \in \mathbb{N} \ | \ uv^iwx^iy \notin L$.
@@ -115,15 +115,15 @@ A livello operazionale si procede per step nella dimostrazione:
 ### Esempio 1
 Data la grammatica $G$ dobbiamo dimostrare che non è *context-free*.
 $$G: \begin{cases} S \to aSBc\ |\ abc\\ cB \to Bc\\ bB \to bb\end{cases}$$
-Il linguaggio generato è $L(G) = \{a^n b^n c^n \ | \ n > 0\}$, supponiamolo libero.
-Sia $p$ un intero positivo scelto in modo arbitrario, allora $z = a^p b^p c^p$.
-Per rispettare le condizioni del lemma vediamo $z$ come $z=uvwxy$ con $|vwx| \leq p \land |vx| > 0$.
+Il linguaggio generato è $L(G) = \{a^n b^n c^n \ | \ n > 0\}$, supponiamolo libero.  
+Sia $p$ un intero positivo scelto in modo arbitrario, allora $z = a^p b^p c^p$.  
+Per rispettare le condizioni del lemma vediamo $z$ come $z=uvwxy$ con $|vwx| \leq p \land |vx| > 0$.  
 Però notiamo che $vx$ non può contenere sia $a$ che $c$ perchè l'ultima occorenza di $a$ e la prima di $c$ sono ad una distanza $p+1$, quindi per $k,j \in \mathbb{N}^+$:
 $$vwx = a^k \ | \ a^k b^j \ | \ b^j \ | \ b^j c^k \ | \ c^k$$
-Concludiamo che $vwx$ non ha occorenze di $a$ oppure non ha occorenze di $c$, per cui $uv^0wx^0y$ non può avere la forma $a^n b^n c^n$ quindi $uv^0wx^0y \notin L$.
+Concludiamo che $vwx$ non ha occorenze di $a$ oppure non ha occorenze di $c$, per cui $uv^0wx^0y$ non può avere la forma $a^n b^n c^n$ quindi $uv^0wx^0y \notin L$.  
 Per contradizione, grazie al pumping lemma, abbiamo dimostrato che $L$ non è libero.
 ### Esempio 2
-Data la grammatica $G$ dobbiamo dimostrare che non è *context-free*.
+Data la grammatica $G$ dobbiamo dimostrare che non è *context-free*.  
 $$G: \begin{cases}
 	S \to CD\\
 	C \to aCA \ | \ bCB \ | \ \varepsilon\\
@@ -135,15 +135,15 @@ $$G: \begin{cases}
 	Bb \to bB\\
 	D \to \varepsilon
 \end{cases}$$
-Dobbiamo per prima cosa trovare il linguaggio generato $L$ (dioca 💀).
-Dobbiamo aguzzare la vista e notare alcune particolarità.
-$D$ va solo in $\varepsilon$ quindi la stringa può crescere solo verso la $C$.
-Il delimitatore $D$ che fa sviluppare i non-terminali alla sua sinistra.
-Quando un terminale $a$ o $b$ è a destra del non-terminale $B$ possiamo scambiare le posizioni di essi.
-Tramite un po' di prove troviamo $L = \{ ww\ | \ w \in \{a,b\}^* \}$
-Quindi è libero o meno?
-Una buona scelta è prendere $z = a^p b^p a^p b^p$, per cui se decomponiamo $a^p = u,\ b^p=vwx,\ a^pb^p=y$ questa rispetta $|vwx| \leq p$.
-Ora poniamo l'indice $i = 0$ per cui la parola diventa $w_1 = a^p b^{p-x} a^p b^p$ , con $x$ la quantità mancante per via dell'indice.
+Dobbiamo per prima cosa trovare il linguaggio generato $L$ (dioca 💀).  
+Dobbiamo aguzzare la vista e notare alcune particolarità.  
+$D$ va solo in $\varepsilon$ quindi la stringa può crescere solo verso la $C$.  
+Il delimitatore $D$ che fa sviluppare i non-terminali alla sua sinistra.  
+Quando un terminale $a$ o $b$ è a destra del non-terminale $B$ possiamo scambiare le posizioni di essi.  
+Tramite un po' di prove troviamo $L = \{ ww\ | \ w \in \{a,b\}^* \}$.  
+Quindi è libero o meno?  
+Una buona scelta è prendere $z = a^p b^p a^p b^p$, per cui se decomponiamo $a^p = u,\ b^p=vwx,\ a^pb^p=y$ questa rispetta $|vwx| \leq p$.  
+Ora poniamo l'indice $i = 0$ per cui la parola diventa $w_1 = a^p b^{p-x} a^p b^p$ , con $x$ la quantità mancante per via dell'indice.  
 Possiamo vedere che $w_1 \notin L$ per cui $L$ non è un linguaggio libero.
 ### Esempi noti
 * $\{a^n b^n c^n \ | \ n > 0\}$ non è libero
@@ -155,11 +155,13 @@ Trasformiamo una grammatica $G^\prime$ in una grammatica in *Chomsky normal form
 $$G: \begin{cases} A \to a\\  A \to A_1 A_2 \\ \vdots \end{cases}$$
 ### Dimostrazione
 Sia $k$ il numero di non terminali in $G$ e che essendo in *Chomsky nomrla form* l'albero di derivazione di $L(G)$ sarà sempre un albero binario del tipo:
+
 ![tree-pumping-variant](./img/02/pumping-variant.png)
+
 Pongo allora $p = 2^{k+1}$ e $z \in L$ tale che $|z| \geq p$, allora l'albero di derivazione di $z$ avrà almeno $k+2$ livelli.
 Il percorso più lungo attraversa $k+1$ non terminali, quindi c'è almeno una coppia lungo il percorso.
 Da qui si prosegue come nella dimostrazione del pumping lemma per cfl "normale".
-## Chiusura rispetto all'intersezione
+## Non chiusura rispetto all'intersezione
 ### Lemma
 La classe dei linguaggi liberi non è chiusa rispetto all'intersezione.
 ### Dimostrazione

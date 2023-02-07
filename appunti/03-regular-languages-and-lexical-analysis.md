@@ -1,5 +1,5 @@
 ## Riconoscere i linguaggi
-Prendiamo l'esempio di $L = \{ a^n b^n \ | \ n > 0 \}$, una buona scelta è usare uno stack, prima inserisco tutte le $a$, poi faccio una `pop` per ogni $b$ che leggo, se alla fine lo stack è vuoto allora la parole appartiene al linguaggio.
+Prendiamo l'esempio di $L = \{ a^n b^n \ | \ n > 0 \}$, una buona scelta è usare uno stack, prima inserisco tutte le $a$, poi faccio una `pop` per ogni $b$ che leggo, se alla fine lo stack è vuoto allora la parole appartiene al linguaggio.  
 Però con dei linguaggi più complessi non ho scelta e devo usare una macchina a stati.
 
 ![example-of-state-automa](./img/03/ex-state-automa.png)
@@ -8,10 +8,10 @@ Le grammatiche regolari sono grammatiche libere che hanno solo produzioni della 
 * $A \to a$
 * $A \to aB$
 * $A \to \varepsilon$
-Questi linguaggi generato delle espressioni regolari, vengono riconosciuti attraverso l'uso di automi deterministici e non.
+Questi linguaggi generato delle espressioni regolari, vengono riconosciuti attraverso l'uso di automi deterministici e non.  
 Per la loro facilità di analisi sono alla base dell'analisi lessicale.
 ### Espressioni regolari (regex)
-Fissiamo un alfabeto $\mathcal{A}$  e un certo numero di operatori.
+Fissiamo un alfabeto $\mathcal{A}$  e un certo numero di operatori.  
 Definiamo allora le espressioni regolari in modo induttivo:
 * **Caso base:**
 	* $\forall a \in \mathcal{A}$ è una regex
@@ -22,7 +22,7 @@ Definiamo allora le espressioni regolari in modo induttivo:
 	* $r_1^*$ è una regex chiamata *Kleene star* e significa ripetere 0 o più volte il simbolo $r_1$
 	* $(r_1)$ è una regex detta *parentesi*, si usa per esprimere la precedenza
 ### Linguaggi denotati
-Se un linguaggio può essere denotato da unìespressione regolare possiamo dire che la regex *denota* quel linguaggio.
+Se un linguaggio può essere denotato da unìespressione regolare possiamo dire che la regex *denota* quel linguaggio.  
 Consideriamo un'espressione regolare $r$ su $\mathcal{A}$, il linguaggio denotato da quell'espressione $L(r)$ è definibile tramite induzione.
 * **Caso base:**
 	* $L(a) = \{a\} \ \forall a \in \mathcal{A}$
@@ -43,13 +43,13 @@ Tutte le operazioni sono associative a sinistra.
 * $L(a^*) = \{ a^n | n \geq 0 \}$
 * $L(a|a^*b) = \{ a \} \cup \{ a^n b | n \geq 0 \}$
 ## Automi a stati finiti
-Sono usati per determinare se una parola appartiene ad un linguaggio denotato da una certa espressione regolare.
+Sono usati per determinare se una parola appartiene ad un linguaggio denotato da una certa espressione regolare.  
 Vedremo due tipi di automi:
 1. Nondeterministc Finite state Automata (NFA)
 2. Deterministic Finite state Automata (DFA)
 Solitamente i calcoli negli NFA risultano molto più pesanti perchè si devono percorrere molti più cammini di derivazione rispetto ad un DFA.
 ## Nondeterministc Finite state Automata (NFA)
-un automa a stati finiti non deterministico è rappresentato dalla tupla:
+Un automa a stati finiti non deterministico è rappresentato dalla tupla:
 $$\mathcal{N} = (S,\mathcal{A},\text{move}_n, s_0, F)$$
 nella quale:
 * $S$ è l'insieme degli stati
@@ -66,8 +66,9 @@ La tupla $\mathcal{N}$ viene rappresentata come un grafo diretto, dove:
 #### Esempio
 ![NFA-rappresentation](./img/03/NFA-rappresentation.png)
 
-Il non determiniscmo è dato dalla presenza dalla presenza di più stati nell'immagine della funzione move$_n(S_0,a)$, che va sia in $S_0$ sia in $S_1$.
+Il non determiniscmo è dato dalla presenza dalla presenza di più stati nell'immagine della funzione move$_n(S_0,a)$, che va sia in $S_0$ sia in $S_1$.  
 Possiamo anche creare una rappresentazione tabellare della funzione di transizione:
+
 | | $\varepsilon$ | $a$ | $b$ |
 | --- | --- | ---| ---|
 | $S_0$      | $\emptyset$ | {$S_0, S_1$} | {$S_0$} |
@@ -75,16 +76,18 @@ Possiamo anche creare una rappresentazione tabellare della funzione di transizio
 | $S_2$ | $\emptyset$ | $\emptyset$ | {$S_3$} |
 | $S_3$ | {$S_3$} | $\emptyset$ | $\emptyset$|
 ### Linguaggi accettati
-Un NFA $\mathcal{N}$ accetta/riconosce una parola $w$ se e solo se esiste almeno un cammino che fa lo spelling di $w$ da $s_0$ ad uno stato di $F$.
+Un NFA $\mathcal{N}$ accetta/riconosce una parola $w$ se e solo se esiste almeno un cammino che fa lo spelling di $w$ da $s_0$ ad uno stato di $F$.  
 Il linguaggio accettato da $\mathcal{N}$, detto $L(\mathcal{N})$ è l'insieme delle stringhe accettate da $\mathcal{N}$.
 #### Esempio 1
 ![NFA-rappresentation](./img/03/NFA-rappresentation.png)
-Il linguaggio accettato è $L((a|b)^*abb*)$.
+
+Il linguaggio accettato è $L((a|b)^*abb)$.
 #### Esempio 2
 ![second-NFA](./img/03/NFA-second-ex.png)
+
 Il linguaggio generato è $L(aa^* | bb^*)$.
 ### Costruzione di Thompson
-Un algoritmo che permette di costruire un NFA $\mathcal{N}$, partendo da una regex $r$, tale che $L(\mathcal{N}) = L(r)$.
+Un algoritmo che permette di costruire un NFA $\mathcal{N}$, partendo da una regex $r$, tale che $L(\mathcal{N}) = L(r)$.  
 La costruzione è basata sulla definizione induttiva di regex:
 * **Caso base:** $r$ è $\varepsilon$ oppure un simbolo dell'alfabeto
 	* Definisco un NFA per riconoscere $L(\varepsilon)$
@@ -103,15 +106,15 @@ Mentre il passo induttivo come:
 
 ![induction-step-thompson](./img/03/thompson-step.png)
 
-Ogni passo per la costruzione introduce al più 2 nuovi stati, quindi l'NFA generato ha al più $2k$ stati, con $k$ il numero di simboli e di operatori nell'espressione regolare.
+Ogni passo per la costruzione introduce al più 2 nuovi stati, quindi l'NFA generato ha al più $2k$ stati, con $k$ il numero di simboli e di operatori nell'espressione regolare.  
 In ogni NFA intermedio ci sono:
 * Esattamente uno stato finale
 * Nessun vertice entrante nello stato iniziale
 * Nessun vertice uscente dallo stato finale
 #### Complessità
-Consideriamo di costruire un NFA con $n$ nodi e $m$ archi, ogni passo aggiunge al più 2 stati e 4 nodi.
+Consideriamo di costruire un NFA con $n$ nodi e $m$ archi, ogni passo aggiunge al più 2 stati e 4 archi.  
 Consideriamo ogni passo svolto in tempo costante, abbiamo un totale di $|r|$ passi, allora:
-* **Spaziale:** $n + m$ ovvero $O(|r|)$
+* **Spaziale:** $n + m$ ovvero $O(2|r|) \implies O(|r|)$
 * **Temporale:** $O(|r|)$
 #### Esempio di applicazione
 Supponiamo di avere la regex $r = (a|b)^*abb$, dobbiamo inanzitutto scomporla in sotto-regex.$$r_1 = (a|b) \hspace{2em} \to \hspace{2em} r_2 = r_1^* = (a|b)^* \hspace{2em} \to \hspace{2em} r_3 = r_2 \cdot abb = (a|b)^*abb$$
@@ -130,11 +133,11 @@ Infine passiamo all'automa per $r_3$ nel quale semplicemenete prendiamo quello p
 
 ## Simulazione di NFAs
 Dopo aver costruito il nostro NFA dobbiamo verificare su una parola $w \in L(\mathcal{N})$.
-Per poter fare questa verifica ci serve *simulare l'auotma*, dobbiamo trovare un'algoritmo formale in grado di poter fare questa verifica senza usare *backstrack* che farebbe aumentare assurdamente il costo della funzione.
+Per poter fare questa verifica ci serve *simulare l'auotma*, dobbiamo trovare un'algoritmo formale in grado di poter fare questa verifica senza usare *backstrack* che farebbe aumentare assurdamente il costo della funzione.  
 Inanzitutto potremmo eliminare le $\varepsilon$-transizioni, che aggiungono solo molto overhead ai nostri algoritmi, introduciamo così le $\varepsilon$-chiusure.
 ### $\varepsilon$-closure
 Sia ($S, \mathcal{A}, \text{move}_n, s_0, F$) un NFA, sia $t \in S$ e sia $T \subset S$.
-Definiamo $\varepsilon$-closure({$t$}) l'insieme di stati in $S$ che sono raggiungibili da $t$ tramite 0 o più $\varepsilon$-transizioni (posso raggiungere anche $t$ stesso).
+Definiamo $\varepsilon$-closure({$t$}) l'insieme di stati in $S$ che sono raggiungibili da $t$ tramite 0 o più $\varepsilon$-transizioni (posso raggiungere anche $t$ stesso).  
 Definiamo invecete $\varepsilon$-closure($T$) come: 
 $$\varepsilon - \text{closure}(T) = \bigcup_{t \in T} \varepsilon - \text{closure}(\{t\})$$
 #### Computazione
@@ -161,16 +164,16 @@ function closure(State t, Stack S)
 Le righe:
 1. `S.push(t)`
 2. `set alreadyOn[t]`
-3. `find u ∈ move(t,ε)`
+3. `find next u ∈ move(t,ε)`
 4. `test alreadyOn[u]`
-Vengono eseguite in tempo costante, dobbiamo allora trovare ogni quante volte vengono riptute.
-Le righe 1 e 2 vengono eseguite ad ogni invocazione, ogni stato va nello stack al più una volta per via di `alreadyOn`, assumendo di avere $n$ stati abbiamo $O(n)$.
-Le righe 3 e 4 vengono eseguite per ogni u $\in$ move$(t,\varepsilon)$, nel caso peggiore ogni stato va nello stack e ogni stato ha almeno una $\varepsilon$-transazione, quindi se abbiamo $m$ archi $O(m)$.
+Vengono eseguite in tempo costante, dobbiamo allora trovare ogni quante volte vengono riptute.  
+Le righe 1 e 2 vengono eseguite ad ogni invocazione, ogni stato va nello stack al più una volta per via di `alreadyOn`, assumendo di avere $n$ stati abbiamo $O(n)$.  
+Le righe 3 e 4 vengono eseguite per ogni u $\in$ move$(t,\varepsilon)$, nel caso peggiore ogni stato va nello stack e ogni stato ha almeno una $\varepsilon$-transazione, quindi se abbiamo $m$ archi $O(m)$.  
 Concludendo l'algoritmo delle $\varepsilon$-closure ha complessità $O(n+m)$.
 ### Algoritmo per la simulazione
 ````
 input : NFA N = (S, A, move, s0, F ), w$
-output : “yes” if w ∈ L(N), “no” otherwise
+output : “yes” if w ∈ L(N), “no” altrimenti
 
 states = ε-closure({s0});
 symbol = nextchar();
@@ -186,8 +189,9 @@ else
 
 ![simulation-NFA-example](./img/03/simulation-ex.png)
 
-Dato l'NFA sopra pensiamo di dover verificare cha la parola $w = ababb$ appartenga o meno al linguaggio generato da esso.
+Dato l'NFA sopra, pensiamo di dover verificare cha la parola $w = ababb$ appartenga o meno al linguaggio generato da esso.  
 Ci serviamo di una tabella per vedere meglio i passaggi:
+
 | states | symbol | move | $\varepsilon$-closure |
 | --- | --- | --- | --- |
 | $T_0$={0,1,2,4,7} | a | {3,8} | {1,2,3,4,6,7,8} |
@@ -197,45 +201,44 @@ Ci serviamo di una tabella per vedere meglio i passaggi:
 | $T_2$ | b | {5,10} | {1,2,4,5,6,7,10} |
 | $T_3$={1,2,4,5,6,7,10} | $ | | |
 #### Complessità 
-La comeplessità non costante è data dal ciclo `while`.
-Lo speudo-codice è semplificato, nella realtà avremmo bisogno di una paio di strutture dati per immagazzinare gli stati.
+La comeplessità non costante è data dal ciclo `while`.  
+Lo speudo-codice è semplificato, nella realtà avremmo bisogno di una paio di strutture dati per immagazzinare gli stati.  
 * Uno stack per lo stato corrente, ovvero gli stati a sinistra dell'assegnamento dentro il `while`.
 * Uno stack per tenere traccia dei nuovi stati dati dall'unione della funzione `ε-closure`.
-Dobbiamo quindi usare una funzione per scambiare i contenuti dei due stack, con complessità $\Theta (x)$ perchè dobbianmo sempre scambiare tutti gli $x$ elementi dello stack.
-Ora assumiamo che il nostro NFA abbia $n$ stati e $m$ archi.
+Dobbiamo quindi usare una funzione per scambiare i contenuti dei due stack, con complessità $\Theta (x)$ perchè dobbianmo sempre scambiare tutti gli $x$ elementi dello stack.  
+Ora assumiamo che il nostro NFA abbia $n$ stati e $m$ archi.  
 Per ogni ciclo `while` devo:
-* Popolare il nuovo stack con complessità $O(n+m)$, devo fare le `ε-closure`.
-* Scambiare le stack con complessità $O(n)$.
-Il ciclo viene ripetuto per tutta la lunghezza di $w$, quindi $O(|w|(n+m))$, nel caso specifico in cui l'NFA derivi dalla costruzione di Thompson $|r| = n+m$ quindi posso scrivere $O(|w||r|)$.
+* Popolare il nuovo stack con complessità $O(n+m)$, devo fare le `ε-closure`.  
+* Scambiare le stack con complessità $O(n)$.  
+Il ciclo viene ripetuto per tutta la lunghezza di $w$, quindi $O(|w|(n+m))$, nel caso specifico in cui l'NFA derivi dalla costruzione di Thompson $2|r| = n+m$ quindi posso scrivere $O(|w||r|)$.
 ### Conclusione sugli NFA
-Dati una regex $r$ ed una parola $w$, quanto costa capire se $w \in L(r)$?
-Applico l'algoritmo della costruzione di Thompson con $O(|r|)$.
-Simulo l'NFA ottenuto con $O(|w||r|)$.
+Dati una regex $r$ ed una parola $w$, quanto costa capire se $w \in L(r)$?  
+Applico l'algoritmo della costruzione di Thompson con $O(|r|)$.  
+Simulo l'NFA ottenuto con $O(|w||r|)$.  
 In conclusione ho $O(|w||r|)$.
 ## Digressione sulle $\varepsilon$-closure
-### Teorema sulle $\varepsilon$-closure
-Sia ($S, \mathcal{N}, \text{move}_n, s_0, F$) un NFA e sia $M \subseteq S$.
+Sia ($S, \mathcal{N}, \text{move}_n, s_0, F$) un NFA e sia $M \subseteq S$.  
 Allora la $\varepsilon$-closure(M) è il più piccolo insieme $X \subseteq S$ tale che $X$ sia una soluzione di:
 $$X = M \cup \{ N^\prime \ | \ N^\prime \in \text{move}_n (N, \varepsilon) \land N \in X \}$$
-#### Nota
-Diciamo il più piccolo per evitare di incorrere in loop infiniti come nel caso di cicli composti da $\varepsilon$-transizioni.
-La formula va letta come: $X$ è composto da $M$ più tutti gli stati $N^\prime$ che sono raggiungibili da $N$ tramite una $\varepsilon$-transizione, con $N$ uno stato di $X$.
+### Nota
+Diciamo il più piccolo per evitare di incorrere in loop infiniti come nel caso di cicli composti da $\varepsilon$-transizioni.  
+La formula va letta come: $X$ è composto da $M$ più tutti gli stati $N^\prime$ che sono raggiungibili da $N$ tramite una $\varepsilon$-transizione, con $N$ uno stato di $X$.  
 Sembra una formula impossibile da calcolare visto che per trovare $X$ dovrei avere già $X$, invece grazie al teorema del punto fisso è calcolabile.
 ### Teorema del punto fisso
 L'equazionaccia vista prima è una particolare equazione su insiemi che prende la forma generale di $X = f(X)$.
 #### Teorema
-Sia $f: 2^D \to 2^D$ per un insieme finito $D$ e sia inoltre $f$ monotona, quindi se $X \subseteq Y$ allora $f(X) \subseteq f(Y)$.
+Sia $f: 2^D \to 2^D$ per un insieme finito $D$ e sia inoltre $f$ monotona, quindi se $X \subseteq Y$ allora $f(X) \subseteq f(Y)$.  
 Allora $\exists m \in \mathbb{N}$ tale per cui esiste un'unica soluzione minima dell'equazione $X = f(X)$ che è $f^m (\emptyset)$.
 #### Dimostrazione
-Prima dimostriamo che $\exists m \in \mathbb{N}$ tale che $f^m(\emptyset)$ è soluzione di $X = f(X)$.
-Per definizione abbiamo immediatamente che $\emptyset \subseteq f(\emptyset)$ e per la monotonia della funzione allora $f(\emptyset) \subseteq f^2(\emptyset)$.
-Per il principio di induzione possiamo affermare che $f^i(\emptyset) \subseteq f^{i+1}(\emptyset) \ \forall i \in \mathbb{N}$, abbiamo quindi una catena $\emptyset \subseteq f^1(\emptyset) \subseteq f^2(\emptyset) \subseteq f^3(\emptyset) \dots$
+Prima dimostriamo che $\exists m \in \mathbb{N}$ tale che $f^m(\emptyset)$ è soluzione di $X = f(X)$.  
+Per definizione abbiamo immediatamente che $\emptyset \subseteq f(\emptyset)$ e per la monotonia della funzione allora $f(\emptyset) \subseteq f^2(\emptyset)$.  
+Per il principio di induzione possiamo affermare che $f^i(\emptyset) \subseteq f^{i+1}(\emptyset) \ \forall i \in \mathbb{N}$, abbiamo quindi una catena $\emptyset \subseteq f^1(\emptyset) \subseteq f^2(\emptyset) \subseteq f^3(\emptyset) \dots$  
 Visto che l'insieme $D$ non è infinito la mia catena dovrà arrivare ad un punto in cui un insieme sarà uguale ad un altro, quindi per un qualche $m$ si ha che $f^m(\emptyset) = f^{m+1}(\emptyset) = f(f^m(\emptyset))$, guarda caso ho proprio dimostrato la forma $X = f(X)$.
 
 Ora proviamo che $f^m(\emptyset)$ è l'unica soluzione minima.
-Poniamo per assurdo che esista una soluzione $A$, allora per ipotesi $A = f(A)$ e quindi $A = f(A) = f^2(A) = \dots = f^m(A)$.
-Sappiamo che $\emptyset \subseteq f(A)$ allora per monotonia della funzione $f^m(\emptyset) \subseteq f^m(A)$ .
-Allora sapendo che $f(A) = A$ possiamo concludere che $f^m(\emptyset) \subseteq A$, quindi $f^m(\emptyset)$ è l'unica soluzione minima.
+Poniamo per assurdo che esista un'altra soluzione $A$, allora per ipotesi $A = f(A)$ e quindi $A = f(A) = f^2(A) = \dots = f^m(A)$.  
+Sappiamo che $\emptyset \subseteq f(A)$ allora per monotonia della funzione $f^m(\emptyset) \subseteq f^m(A)$ .  
+Allora sapendo che $f^m(A) = A$ possiamo concludere che $f^m(\emptyset) \subseteq A$, quindi $f^m(\emptyset)$ è l'unica soluzione minima.
 ## Deterministic Finite state Automata (DFA)
 Definiamo un automa a stati finiti deterministico come la tupla 
 $$ \mathcal{D} = (S, \mathcal{A}, \text{move}_d, s_0, F)$$
@@ -253,13 +256,13 @@ Il linguaggio accettato da un DFA $\mathcal{D}$, denotato da $L(\mathcal{D})$, �
 ### Simulazione con funzione di transizione totale
 Iniziando dallo stato inziale seguo il cammino che fa lo spelling di $w$, se raggiungo uno stato finale ritorno "yes", altrimenti ritorno "no".
 ### Simulazione con funzione di transizione parziale
-Iniziando dallo stato iniziale seguo il cammino che fa lo spelling di $w = a_1 \dots a_k$, se per qualche carattere $a_i$ non esiste uno stato "target" ritorno immediatamente "no".
+Iniziando dallo stato iniziale seguo il cammino che fa lo spelling di $w = a_1 \dots a_k$, se per qualche carattere $a_i$ non esiste uno stato "target" ritorno immediatamente "no".  
 Se raggiungo uno stato finale allora ritorno "yes",altrimenti ritorno "no".
 ### Funzione parziale vs. totale
-Dato un DFA $\mathcal{D}$ con funzione di transizione parziale posso allora definire un altro DFA $\mathcal{D}^\prime$ con funzione di transizione totale tale che $L(\mathcal{D}) = L(\mathcal{D}^\prime)$.
+Dato un DFA $\mathcal{D}$ con funzione di transizione parziale posso allora definire un altro DFA $\mathcal{D}^\prime$ con funzione di transizione totale tale che $L(\mathcal{D}) = L(\mathcal{D}^\prime)$.  
 Devo usare dgli stati "morti" detti sink, ovvero uno stato che srà l'oobbiettivo di tutte le transizioni mancanti e avrà dei self-loop per ogni lettera del mio alfabeto.
 ## Costruzione dei subset
-Dato un NFA $\mathcal{N}$ devo costruire un DFA $\mathcal{D}$ tale che $L(\mathcal{D}) = L(\mathcal{N})$.
+Dato un NFA $\mathcal{N}$ devo costruire un DFA $\mathcal{D}$ tale che $L(\mathcal{D}) = L(\mathcal{N})$.  
 **Idea:** Uso le $\varepsilon$-closure per mappare i subset degli stati di un NFA in un singolo stato di un DFA.
 ### Algoritmo
 ````
@@ -293,6 +296,7 @@ Proviamo ora dato un NFA a convertirlo in DFA.
 ![NFA-to-DFA](./img/03/NFA-to-DFA-ex.png)
 
 Prima cosa cerco tutto l'alfabeto, ho solo due lementi $a$ e $b$, quindi dovrò fare le $\varepsilon$-cchiusure solo di questi per ogni nodi.
+
 | Stati | $\varepsilon$-closure $a$-transizioni | $\varepsilon$-closure $b$-transizioni |
 | --- | --- | --- |
 | $\varepsilon (0) = T_0 =$ {0,1,2,4,7} | $\varepsilon (3,8) = T_1 =$ {1,2,3,4,6,7,8} | $\varepsilon (5) = T_2 =$ {1,2,4,5,6,7} |
