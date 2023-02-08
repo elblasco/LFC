@@ -28,7 +28,7 @@ Per le grammatiche LL(1) possiamo creare una tabella di parsing per guidare le d
 | $T^\prime$ |  | $T\prime \to \varepsilon$ | $T^\prime \to ∗FT^\prime$ |  | $T^\prime \to \varepsilon$ | $T^\prime \to \varepsilon$|  
 | $F$ | $F \to id$ |  |  | $F \to (E)$ |  |  |
 
-Quindi data una parola $w$ dobbiamo leggerla e, consumando l'input, fare la produzione nella casella \[$T,w[i]$\].
+Quindi data una parola $w$ dobbiamo leggerla e, consumando l'input, fare la produzione nella casella $[ T,w[i]]$.
 Se capitiamo in una casella che è vuota dobbiamo laniare un errore.
 ### Algoritmo
 ````
