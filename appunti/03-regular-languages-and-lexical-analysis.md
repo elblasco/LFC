@@ -260,14 +260,14 @@ Iniziando dallo stato iniziale seguo il cammino che fa lo spelling di $w = a_1 \
 Se raggiungo uno stato finale allora ritorno "yes",altrimenti ritorno "no".
 ### Funzione parziale vs. totale
 Dato un DFA $\mathcal{D}$ con funzione di transizione parziale posso allora definire un altro DFA $\mathcal{D}^\prime$ con funzione di transizione totale tale che $L(\mathcal{D}) = L(\mathcal{D}^\prime)$.  
-Devo usare dgli stati "morti" detti sink, ovvero uno stato che srà l'oobbiettivo di tutte le transizioni mancanti e avrà dei self-loop per ogni lettera del mio alfabeto.
+Devo usare uno stato "morto" detto sink, ovvero uno stato che sarà l'obbiettivo di tutte le transizioni mancanti e avrà dei self-loop per ogni lettera dell' alfabeto.
 ## Costruzione dei subset
 Dato un NFA $\mathcal{N}$ devo costruire un DFA $\mathcal{D}$ tale che $L(\mathcal{D}) = L(\mathcal{N})$.  
 **Idea:** Uso le $\varepsilon$-closure per mappare i subset degli stati di un NFA in un singolo stato di un DFA.
 ### Algoritmo
 ````
 input : NFA N = (S, A, moven , s0, F )
-output : DFA D = (R, A, moved , t0, E ) such that L(D) = L(N)
+output : DFA D = (R, A, moved , t0, E ) tale che L(D) = L(N)
 t0 = ε-closure({s0});
 R = {t0};
 set t0 as unmarked;
@@ -284,11 +284,11 @@ foreach T ∈ R do
 	if (T ∩ F) != ∅ then set T ∈ E;
 ````
 ### Complessità
-La complessità è data dal ciclo `while`, dal ciclo `foreach` annidato e dalla computazione delle $\varepsilon$-closure.
+La complessità è data dal ciclo `while`, dal ciclo `foreach` annidato e dalla computazione delle $\varepsilon$-closure.  
 Dobbiamo fare delle premesse, poniamo che l'NFA abbia $n$ stati e $m$ archi, mentre il DFA in output abbia $n_d$ stati.
 * Il ciclo `while` va a scorrere tutti gli stati del DFA contenuti in `R`  per verificare `unmarked` nel caso peggiore $O(n_d)$.
 * Il ciclo `foreach` annidato scorre ogni singolo elemento dell'alfabeto e quindi viene ripetuto $\Theta (|\mathcal{A}|)$ volte.
-* Infinme il calcolo delle $\varepsilon$-closure ha costo $O(n+m)$.
+* Infine il calcolo delle $\varepsilon$-closure ha costo $O(n+m)$.
 Risulta che la complessità finale $O(n_d \cdot |\mathcal{A}| \cdot (n+m))$.
 ### Esempio
 Proviamo ora dato un NFA a convertirlo in DFA.
@@ -311,33 +311,33 @@ Facendo una rappresentazione grafica:
 
 Come si può notare non è il miglior DFA che possiamo ottenere, ma è comunque un DFA valido per linguaggio $L((a|b)^*abb)$.
 ## Minimizzazione DFA
-Dato un DFA $\mathcal{D}$ devo ottenere un DFA $\mathcal{D^\prime}$, con il minor numero di stati possibile, tale che $L(\mathcal{D^\prime}) = L(\mathcal{D})$.
-L'idea è he ci sono degli stati rindondanti, ovvero presi due stati $s$ e $t$ allora:
+Dato un DFA $\mathcal{D}$ devo ottenere un DFA $\mathcal{D^\prime}$, con il minor numero di stati possibile, tale che $L(\mathcal{D^\prime}) = L(\mathcal{D})$.  
+L'idea è he ci sono degli stati ridondanti, ovvero presi due stati $s$ e $t$ allora:
 $$\forall a \in \mathcal{A}^*, \text{move}^*_d(s,a) \in F \iff \text{move}^*_d(t,a) \in F$$
 ### Equivalenza di stati
 Sia $\mathcal{D} = (S, \mathcal{A}, \text{move}_d, s_0, F)$ un DFA con funzione di transizione totale , allora $s,t \in S$ sono equivalenti se e solo se vale:
 $$\forall a \in \mathcal{A}^*, \text{move}^*_d(s,a) \in F \iff \text{move}^*_d(t,a) \in F$$
 Dove la funzione di transizione multi-passo move$^*_d$ è definita con l'induzione sulla lunghezza della stringa.
 * $\text{move}^*_d (s, \varepsilon) = s$
-* $\text{move}^*_d (s, wa) = \text{move}^*_d(\text{move}^*_d(s,w),a)$
+* $\text{move}^*_d (s, wa) = \text{move}_d(\text{move}^*_d(s,w),a)$
 ### Raffinamento delle partizioni
 Con questo processo arriveremo a dividere gli stati in blocchi, ovvero sottoinsiemi disgiunti di $S$.
 Iniziamo con 2 blocchi:
 * $B_1 = F$
 * $B_2 = S \backslash F$
-Facciamo questa scelta perchè con $s \in B_1$ e $t \in B_2$ non sono equivalenti perchè $\text{move}^*_d (s, \varepsilon) \in F$ e $\text{move}^*_d (t, \varepsilon) \notin F$.
-Per i passi successivi dobbiamo verificare che in ogni blocco ci siano solo stati equivalenti.
-Se tutti gli stati un $B_i = \{ s_1, \dots , s_k\}$ sono equivalenti allora $\forall a \in \mathcal{A}$ gli stati obbiettivo delle $a$-transizioni da $s_1, \dots , s_k$ sono tutti nello stesso blocco.
+Facciamo questa scelta perchè con $s \in B_1$ e $t \in B_2$ non sono equivalenti perchè $\text{move}^*_d (s, \varepsilon) \in F$ e $\text{move}^*_d (t, \varepsilon) \notin F$.  
+Per i passi successivi dobbiamo verificare che in ogni blocco ci siano solo stati equivalenti.  
+Se tutti gli stati un $B_i = \{ s_1, \dots , s_k\}$ sono equivalenti allora $\forall a \in \mathcal{A}$ gli stati obbiettivo delle $a$-transizioni da $s_1, \dots , s_k$ sono tutti nello stesso blocco.  
 Il blocco $B_i$ può essere diviso se per qualche $s,t \in B_i$ $\text{move}_d(s,a) \in B_j \land \text{move}_d(t,a) \notin B_j$, la divisione si compie dividendo in due insiemi:
 * {$s \in B_i \ | \ \text{move}_d(s,a) \in B_j$}
 * {$s \in B_i \ | \ \text{move}_d(s,a) \notin B_j$}
-Si noti che se non abbiamo un DFA con funzione cNompleta possiamo sempre aggiungere un *sink* e il min-DFA in output non è detto abbia una funzione totale.
+Si noti che se non abbiamo un DFA con funzione completa possiamo sempre aggiungere un *sink* e il min-DFA in output non è detto abbia una funzione totale.
 #### Esempio 1
 
 ![DFA-minimization](./img/03/DFA-minimization-ex.png)
 
-Creo i blocchi iniziali $B_1 = \{E\}$ e $B_2 = \{A,B,C,D\}$.
-Separo $B_2$: $B_1=\{E\},\ B_{21} = \{D\},\ B_{22} = \{A,B,C\}$ .
+Creo i blocchi iniziali $B_1 = \{E\}$ e $B_2 = \{A,B,C,D\}$.  
+Separo $B_2$: $B_1=\{E\},\ B_{21} = \{D\},\ B_{22} = \{A,B,C\}$ .  
 Separo $B_{22}:$ $B_1 = \{E\},\ B_{21} = \{D\}, \ B_{221} = \{B\}, \ B_{222} = \{A,C\}$.
 
 ![DFA-minimization](./img/03/DFA-minimization-ex-pt2.png)
@@ -351,10 +351,10 @@ Avendo una funzione parziale posso aggiungere un *sink* per rendere la funzione 
 
 ![DFA-minimization](./img/03/DFA-minimization-ex2-pt2.png)
 
-Iniziamo con $B_1 = \{D\}$ e $B_2 = \{A,B,C,sink\}$.
-Separo $B_2$ perchè $\text{move}_d(C/B,a) \in B_1$, $B_1 = \{D\}$ e $B_{21} = \{A,sink\}$ e $B_{22} = \{B,C\}$.
-Separo $B_{21}$ perchè $\text{move}_d(A,a) \in B_{22}$, $B_1 = \{D\}$ e $B_{211} = \{A\}$ e $B_{212} = \{sink\}$ e $B_{22} = \{B,C\}$.
-Infine separo $B_{22}$ perchè $\text{move}_d(C,b) \in B_{212}$, $B_1 = \{D\}$ e $B_{211} = \{A\}$ e $B_{212} = \{sink\}$ e $B_{221} = \{B\}$ e $B_{222} = \{C\}$.
+Iniziamo con $B_1 = \{D\}$ e $B_2 = \{A,B,C,sink\}$.  
+Separo $B_2$ perchè $\text{move}_d(C/B,a) \in B_1$, $B_1 = \{D\}$ e $B_{21} = \{A,sink\}$ e $B_{22} = \{B,C\}$.  
+Separo $B_{21}$ perchè $\text{move}_d(A,a) \in B_{22}$, $B_1 = \{D\}$ e $B_{211} = \{A\}$ e $B_{212} = \{sink\}$ e $B_{22} = \{B,C\}$.  
+Infine separo $B_{22}$ perchè $\text{move}_d(C,b) \in B_{212}$, $B_1 = \{D\}$ e $B_{211} = \{A\}$ e $B_{212} = \{sink\}$ e $B_{221} = \{B\}$ e $B_{222} = \{C\}$.  
 Risulta che il DFA è già minimizzato.
 ### Dimensioni di un DFA
 #### Lemma
@@ -364,8 +364,8 @@ Prendiamo il il linguaggio $L=((a|b)^* a (a|b)^{n-1})$, allora ci sarà un NFA c
 
 ![dim-number-states](./img/03/dim-n-states.png)
 
-Allora per contraddizione, poniamo esista un DFA $\mathcal{D}$ che accetta $L$ e ha $k < 2^n$ stati.
-Sappiamo che nel linguaggio $L$ ci sono esattamente $2^n$ parole distinte con la lunghezza $n$.
+Allora per contraddizione, poniamo esista un DFA $\mathcal{D}$ che accetta $L$ e ha $k < 2^n$ stati.  
+Sappiamo che nel linguaggio $L$ ci sono esattamente $2^n$ parole distinte con la lunghezza $n$.  
 Allora ci sono due percorsi in $\mathcal{D}$ tali che:
 * La lunghezza è $n$.
 * Compongono rispettivamente $w_1$ e $w_2$ con $w_1 \neq w_2$.
@@ -373,9 +373,10 @@ Allora ci sono due percorsi in $\mathcal{D}$ tali che:
 Allora per degli stati $x_1, x_2$ e  $x$; ho due possibilità mutualmente esclusive.
 * $w_1 = x_1 a x$ e $w_2 = x_2 b x$
 * $w_1 = x_1 b x$ e $w_2 = x_2 a x$
-Possiamo supporre senza problemi che $w_1 = x_1 a x$ e $w_2 = x_2 b x$.
-Allora possiamo definire $w^\prime_1 = x_1 a b^{n-1} \in L$, lo stato che raggiunge $w^\prime_1$ in $\mathcal{D}$ è finale.
-Ma allora ho una contraddizione perchè lo stato non può essere finale visto che è raggiunto anche da $x_2bb^{n-1} \notin L(\mathcal{D})$.
+Possiamo supporre senza problemi che $w_1 = x_1 a x$ e $w_2 = x_2 b x$.  
+Allora possiamo definire $w^\prime_1 = x_1 a b^{n-1} \in L(\mathcal{D})$, lo stato che raggiunge $w^\prime_1$ in $\mathcal{D}$ è finale.  
+Ma allora ho una contraddizione perchè lo stato non può essere finale visto che è raggiunto anche da $x_2bb^{n-1} \notin L(\mathcal{D})$.  
+Di conseguenza non posso avere l'ultimo nodo in comune e quindi devo avere un numero di stati tale che $k \geq 2^n$.
 ## Pumping lemma per linguaggi regolari
 ### Lemma
 Sia $L$ un linguaggio regolare, allora:
@@ -387,10 +388,10 @@ Sia $L$ un linguaggio regolare, allora:
 	* $|v| > 0 \ \land$
 	* $\forall i \in \mathbb{N}. uv^iw \in L$
 ### Dimostrazione
-Sia $L$ un linguaggio regolare, allora esiste un DFA $\mathcal{D} = (S, \mathcal{A}, \text{move}_n, s_0, F)$ tale che $L = L(\mathcal{D})$.
-Sia $p = |S| - 1$, allora tutti i cammini da $s_0$ a qualche stato finale che attraversano al più una volta ogni stato hanno lunghezza limitata da $p$.
-Allora per una parola $z$ vale $|z| > p$, allora possiampo scomporre $z$ in $z = a_1 \dots a_p z^\prime$ e siamo sicuri che almeno uno stato, chiamiamolo $s^*$, è stato attraversato più di una volta durante $a_1 \dots a_p$.
-Questo implica che esiste un ciclo in $\mathcal{D}$ che parte da $s^*$ e torna in $s^*$, questo ciclo può essere indicato come $a_{i+1} \dots a_j$ con $i  < j \leq p$.
+Sia $L$ un linguaggio regolare, allora esiste un DFA $\mathcal{D} = (S, \mathcal{A}, \text{move}_n, s_0, F)$ tale che $L = L(\mathcal{D})$.  
+Sia $p = |S| - 1$, allora tutti i cammini da $s_0$ a qualche stato finale che attraversano al più una volta ogni stato hanno lunghezza limitata da $p$.  
+Allora per una parola $z$ vale $|z| > p$, allora possiampo scomporre $z$ in $z = a_1 \dots a_p z^\prime$ e siamo sicuri che almeno uno stato, chiamiamolo $s^*$, è stato attraversato più di una volta durante $a_1 \dots a_p$.  
+Questo implica che esiste un ciclo in $\mathcal{D}$ che parte da $s^*$ e torna in $s^*$, questo ciclo può essere indicato come $a_{i+1} \dots a_j$ con $i  < j \leq p$.  
 Possiamo ora scomporre la parola in:
 * $u = a_1 \dots a_i$
 * $v = a_{i+1} \dots a_j$ (sarebbe il ciclo, ovvero il termine pompabile)
@@ -407,8 +408,8 @@ Mostra per contraddizione che un linguaggio non è regolare.
 	  Dove
 	  $Q \equiv (z = uvw \land |uv| \leq p \land |v| > 0)$ implica che $(\exists i \in \mathbb{N} . uv^iw \notin L)$
 #### Esempio
-Proviamo a dimostrare che $L = \{a^nb^n | n > 0\}$ non è regolare.
-Assumiamo che $L$ sia regolare e prendiamo la parola $z = a^p b^p$, partizioniamo ora i termini come segue $u = a_1 \dots a_x$, $v = a_{x+1} \dots a_p$ e infine $w = b_1 \dots b_p$.
+Proviamo a dimostrare che $L = \{a^nb^n | n > 0\}$ non è regolare.  
+Assumiamo che $L$ sia regolare e prendiamo la parola $z = a^p b^p$, partizioniamo ora i termini come segue $u = a_1 \dots a_x$, $v = a_{x+1} \dots a_p$ e infine $w = b_1 \dots b_p$.  
 Il partizionamento scelto rispetta i vincoli dell'ipotesi perchè:
 * $|uv| \leq p$ contenendo solo $a$.
 * $|v| > 0$ perchè $v$ contiene almeno un'occorenza di $a$.

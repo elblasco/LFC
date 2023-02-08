@@ -1,13 +1,13 @@
 ## Parsing
-Data una grammatica $\mathcal{G} = \{ V, T, S, P \}$ e una parola $w$, il parsing serve a verficare se $w \in L(\mathcal{G})$ e fornisce un albero di derivazione.
+Data una grammatica $\mathcal{G} = \{ V, T, S, P \}$ e una parola $w$, il parsing serve a verficare se $w \in L(\mathcal{G})$ e fornisce un albero di derivazione.  
 I due maggiori approcci al parsing sono:
 * Top-down: costruiamo le derivazioni leftmost dalla radice alle foglie
-* Bottom-up: costruiamo le derivazioni rightmost dalle foglie alla radice (questo è l'approccio  così detto *ganzo* dalla Quaglia)
+* Bottom-up: costruiamo le derivazioni rightmost dalle foglie alla radice (questo è l'approccio così detto *ganzo* dalla Quaglia)
 ## Top-down parsing
-Esempio 1
+Esempio 1  
 Sia $w = cad$ e la grammatica
 $$ \mathcal{G} : \begin{cases} S \to cAd \\ A \to ab|a \end{cases}$$
-Ad occhio sembra molto semplice, ma per l'algoritmo non è semplice distinguere quale non terminare scegliere.
+Ad occhio sembra molto semplice, ma per l'algoritmo non è semplice distinguere quale non terminare scegliere.  
 Dovremmo usare del *backtrack* per poter decidere il terminale, ma sappiamo bene che questo apprioccio fa schizzare i costi alle stelle.
 ## Predictive Top-down parsing
 In questo caso non è necessario applicare *backtrack* poichè facciamo riferimento ad una classe di grammatiche dette **grammatiche LL(1)**, vengono chiamate così perchè per essere analizate:
@@ -16,7 +16,7 @@ In questo caso non è necessario applicare *backtrack* poichè facciamo riferime
 * Guardiamo un solo simbolo (non-terminale).
 Tali grammatiche posso essere parsate senza usare *backtrack* ed in modo completamente deterministico.
 
-Prendiamo un """semplice""" esempio (Diostronzo se dice ancora semplice mi alzo e me ne vado).
+Prendiamo un """semplice""" esempio (Se dice ancora semplice mi alzo e me ne vado).
 $$\mathcal{G}:\begin{cases}E \to TE^\prime \\ E^\prime \to +TE^\prime|\varepsilon \\ T \to FT^\prime \\ T^\prime \to *FT^\prime|\varepsilon \\ F \to (E)|id \end{cases}$$
 Per le grammatiche LL(1) possiamo creare una tabella di parsing per guidare le derivazioni leftmost.
 
