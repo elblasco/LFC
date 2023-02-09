@@ -1,3 +1,4 @@
+# 08-interpreter
 ## Symbol table
 Questa è la sttruttura dati più importante durante la compilazione dopo il *syntax tree*.
 Tipicamente è implementata attraverso un dizionario e risulta fondamentale quando entrano in gioco attributi ereditati perchè su di essa vengono effettuate le operazioni di:

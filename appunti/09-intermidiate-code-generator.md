@@ -1,3 +1,4 @@
+# 09-intermidiate-code-generator
 Ripercorriamo un istante tutte le fasi di front-end che abbiamo visto fino ad ora:
 * **Analisi lessicale:** riconosce i vari lessemi e restituire una stringa i token ovvero quegli elementi di cui ha bisogno l'analizzatore sintattico.
 * **Anlisi sintattica:** tutto il parsing, quindi veere o meno se una serie di token appartiene o meno al linguaggio di nostra comeptenza.

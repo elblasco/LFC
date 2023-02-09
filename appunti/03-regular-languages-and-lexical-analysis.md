@@ -1,3 +1,4 @@
+# 03-regular-languages-and-lexical-analysis
 ## Riconoscere i linguaggi
 Prendiamo l'esempio di $L = \{ a^n b^n \ | \ n > 0 \}$, una buona scelta è usare uno stack, prima inserisco tutte le $a$, poi faccio una `pop` per ogni $b$ che leggo, se alla fine lo stack è vuoto allora la parole appartiene al linguaggio.  
 Però con dei linguaggi più complessi non ho scelta e devo usare una macchina a stati.

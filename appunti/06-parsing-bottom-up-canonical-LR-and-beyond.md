@@ -1,3 +1,4 @@
+# 06-parsing-bottom-up-canonical-LR-and-beyond
 ## Automi LR(1)
 Sono gli automi che riescono a parsare più grammatiche, ma per questo presentano un elevato numero di stati e un'elevata difficoltà computazionale.
 ### LR(1)-items

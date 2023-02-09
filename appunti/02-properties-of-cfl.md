@@ -1,3 +1,4 @@
+# 02-properties-of-cfl
 ## Chiusura rispetto all'unione
 ### Lemma
 La classe dei linguaggi liberi è chiusa rispetto all'unione insiemistica $\cup$, quindi se $L_1$ e $L_2$ sono due linguaggi liberi allora $L_1 \cup L_2$ è in linguagio libero.

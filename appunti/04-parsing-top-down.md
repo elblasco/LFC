@@ -1,3 +1,4 @@
+# 04-parsing-top-down
 ## Parsing
 Data una grammatica $\mathcal{G} = \{ V, T, S, P \}$ e una parola $w$, il parsing serve a verficare se $w \in L(\mathcal{G})$ e fornisce un albero di derivazione.  
 I due maggiori approcci al parsing sono:

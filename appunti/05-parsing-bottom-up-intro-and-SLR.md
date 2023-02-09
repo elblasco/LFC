@@ -1,3 +1,4 @@
+# 05-parsing-bottom-up-intro-and-SLR
 ## Intro
 Queste tipologi di parsing condividono le stesse tecniche fondamentali.
 * La $P$ delle nostre grammatiche va sempre estesa a $P^\prime$ aggiungendo la produzione  $S^\prime \to S$ con $S^\prime$ un non-terminale *fresh*.

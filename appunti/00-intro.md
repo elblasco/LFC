@@ -1,3 +1,4 @@
+# 00-intro
 ## A long way to go
 Vedremo solo la conversione fino al codice intermedio ma non oltre.
 Per poter eseguire il codice sorgenete sarebbero necessari ulteriori passaggi come la conversione in istruzioni binarie ed il linking delle librerie.

@@ -1,3 +1,4 @@
+# 07-semantic-analysis
 Calcoliamo informazioni aggiuntive una volta che la struttura sintatica è conosciuta, queste informazioni sono al di là delle capacità delle grammatiche *context-free*, diciamo "vanilla".  
 Tipicamente in questa fase:
 * Popoliamo la tabella dei simboli (*symbol table*) dopo ogni dichiarazione.

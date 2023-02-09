@@ -1,3 +1,4 @@
+# 01-generative-grammars
 ## Componenti in modo informale
 * **Vocabolario:** un insieme di simboli.
 	* Alcuni dei quali chiamatai *terminali* costituiscono i token di output dell'*analisi lessicale*.
