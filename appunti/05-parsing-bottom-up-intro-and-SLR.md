@@ -4,11 +4,11 @@ Queste tipologi di parsing condividono le stesse tecniche fondamentali.
 * Lo stesso algoritmo shift/reduce per il parsing.
 * La costruzione di un automa caratteristico come controllore dell'algoritmo di parsing.
 ## Automi LR(0)
-Iniziamo col dire che LR(0) signica le leggiamo la parola da sinistra a destra L, compiamo derivazioni rightmost R e non abbiamo simboli nel lookahead 0.
+Iniziamo col dire che LR(0) signica le leggiamo la parola da sinistra a destra L, compiamo derivazioni rightmost R e non abbiamo simboli nel lookahead 0.  
 Gli automi LR(0) sono formati da stati, i quali sono insiemi di LR(0)-items: $A \to \alpha \cdot \beta$.
 ### LR(0)-items
-Consideriamo l'item $S^\prime \to \cdot S$, vuol dire che dobbiamo ancora leggere la parola da parasare e la parola risulterà accettata se deriverà da $S$.
-Possiamo affermare che il nostro item $S^\prime \to \cdot S$ dovrà essere nello stato iniziale chiamato $P_0$.
+Consideriamo l'item $S^\prime \to \cdot S$, vuol dire che dobbiamo ancora leggere la parola da parasare e la parola risulterà accettata se deriverà da $S$.  
+Possiamo affermare che il nostro item $S^\prime \to \cdot S$ dovrà essere nello stato iniziale chiamato $P_0$.  
 Anche altri item potrebbero essere in $P_0$.
 ### Chiusura di un insieme di LR(0)-items
 #### Definizione
@@ -33,7 +33,7 @@ $$closure_0(\{ E^\prime \to \cdot E \}) = \{ \{E^\prime \to \cdot E\}, \{E \to \
 ````
 function closure0(P)  
 forach item ∈ P do
-	item.unmarked=True;
+	item.unmarked = True;
 while ∃item ∈ P : item.unmarked == True do  
 	item.unmarked = False;  
 	if item has the form A → α · Bβ then  
@@ -43,7 +43,7 @@ while ∃item ∈ P : item.unmarked == True do
 return P ;
 ````
 ### Costruzione automa LR(0)
-Dobbiamo costruire l'automa popolando un insieme di stati mentre definiamo la funzione di transizione. (non è così difficile come sembra, basta trovare esercizi facili in esame)
+Dobbiamo costruire l'automa popolando un insieme di stati mentre definiamo la funzione di transizione.   (non è così difficile come sembra, basta trovare esercizi facili in esame)
 * **Inizio:** per prima cosa mettiamo nel kernel dello stato iniziale $P_0$ la produzione $S^\prime \to \cdot S$.
 * **Ripetizione:** ripetiamo questo procediamento per ogni stato non ancora visitato:
 	* Costruiamo $closure_0$(kernel), con kernel intendiamo il kernel di quello stato.
@@ -96,27 +96,28 @@ while ∃ P ∈ Q : p.unmarked == True do
 			closure0(Tmp) = Y -target of P;
 ````
 ## Automi LR(1)
-Piccolo inciso per introdurre un concetto che serve nelle tabelle di parsing.
-Questi automi sono più "ricchi" di informazioni di un automa LR(0), gli stati sono composti da insiemi di items LR(1).
-LR(1)-item: $[A \to \alpha \cdot \beta, \Delta]$ dove $L \subseteq T \cup \{\$\}$
-La funzione di lookahead $\mathcal{LA} : P \times P \to V \cup \{\$\}$, tutto un casino la vedremo più in la.
+Piccolo inciso per introdurre un concetto che serve nelle tabelle di parsing.  
+Questi automi sono più "ricchi" di informazioni di un automa LR(0), gli stati sono composti da insiemi di items LR(1).  
+LR(1)-item: $[A \to \alpha \cdot \beta, \Delta]$ dove $\Delta \subseteq T \cup \{\$\}$.  
+La funzione di lookahead $\mathcal{LA} : P \times P \to 2^{V \cup \{\$\}}$, tutto un casino la vedremo più in la.
 ## Costruzione tabella di parsing LR(0)/SLR(1)/LR(1)
 ### Tabella di parsing LR(0)/LR(1)
-Dobbiamo riepire una matrice $M$ nella quale le entry hammo la forma $M[P,Y]$ con $P$ uno stato e $Y$ un simbolo del vocabolario, la riempiremo con le seguenti regole:
-* Se $Y$ è un terminale e $\tau(P,Y) = Q$ inseriasco la mossa `shift Q`.
+Dobbiamo riempire una matrice $M$ nella quale le entry hanno la forma $M[P,Y]$ con $P$ uno stato e $Y \in V \cup \{\$\}$.  
+Prendiamo la transizione $\tau(P,Y) = Q$, allora la tabella va riempita attraverso le seguenti regole:
+* Se $Y$ è un terminale inserisco la mossa `shift Q`.
 * Se $P$ contiene una produzione del tipo $A \to \beta \cdot$
-	* Nel caso LR(0)-item $[A \to \beta \cdot]$ allora inserisco `reduce` $A \to \beta$
-	* Nel caso LR(1)-ite, $[A \to \beta \cdot, \Delta]$ e $Y \in \mathcal{LA}(P, A \to \beta)$
-* Se $P$ contiene l'accempting item e $Y = \$$ allora inserisco `accept`
-* Se $Y$ è un terminale o $ e non vale nessuan delle precedenti inserisco `error`
-* Se $Y$ è un non-terminale e $\tau(P,Y) = Q$ inserisco `goto Q`
+	* Nel caso LR(0)-item $[A \to \beta \cdot]$ allora inserisco `reduce` $A \to \beta$.
+	* Nel caso LR(1)-item, $[A \to \beta \cdot, \Delta]$ e inseriremo `reduce` $A \to \beta$ in ogni item contenuto in $\Delta$.
+* Se $P$ contiene l'accempting item e $Y = \$$ allora inserisco `accept`.
+* Se $Y$ è un terminale o $ e non vale nessuan delle precedenti inserisco `error`.
+* Se $Y$ è un non-terminale inserisco `goto Q`.
 ### Conflitti
 La tabella può avere  *entry multipli-defined*, in questo caso si parla di conflitti:
 * **s/r conflict:** nel caso in cui almeno una entry $M[P,Y]$ contenga un'operazione `shift` e una `reduce`.
-* **r/r conflict:** nel caso in cui almeno una entry $M[P,Y]$ contenga due operazioni `reduce` distinte
+* **r/r conflict:** nel caso in cui almeno una entry $M[P,Y]$ contenga due operazioni `reduce` distinte.
 Appena verifichiamo la presenza di un conflitto possiamo dire che la nostra grammatica non è LR(0), SLR(1), LR(1) o LALR(1).
 ### Tabella di parsing SLR(1)
-E' il livello di informazioni intermedio tra LR(0) e LR(1).
+E' il livello di informazioni intermedio tra LR(0) e LR(1).  
 Queste tabelle si ottengono prendendo:
 * Un automa caratteristico LR(0).
 * e una funzione di lookahead molto semplice $\mathcal{LA}(P,A \to \beta) = follow(A)$ per ogni $A \to \beta \cdot \in P$
@@ -124,7 +125,7 @@ Come prima vale che una grammatica è SLR(1) se e solo se la corrispondente atbe
 #### Esempio
 Costruiamo la tabella di parsing SLR(1) per la seguente grammatica
 $$\begin{cases}S \to aABe \\ A \to Abc | b \\ B \to d\end{cases}$$
-Ci serve l'automa LR(0) ma lo abbiamo già da un paio di esmepi fa, aggiungiamoci però il colore verde allo stato di `accept` e marchiamo come finali gli stati dove abbiamo una `reduce`.
+Ci serve l'automa LR(0) ma lo abbiamo già da un paio di esempi fa, aggiungiamoci però il colore verde allo stato di `accept` e marchiamo come finali gli stati dove abbiamo una `reduce`.
 
 ![automa_SLR(1)](./img/05/automa-SLR(1)-ex.png)
 
@@ -135,7 +136,7 @@ Ora dobbiamo calcolare i $follow$ e di conseguenza i $first$.
 | A | b | b,d | 
 | B | d | e |
 Una volta calcolati procediamo così:
-* Prendiamo tutti gli stati $P$ che contengono un reducing item $A \to \beta$, andiamo ad inserire la mossa di `reduce` nella casella $M[P,Y]$ con $Y = \mathcal{LA}(P, A \to \beta) = follow(A)$.
+* Prendiamo tutti gli stati $P$ che contengono un reducing item $A \to \beta \cdot$, andiamo ad inserire la mossa di `reduce` nella casella $M[P,Y]$ con $Y = \mathcal{LA}(P, A \to \beta) = follow(A)$.
 * Inseriamo in $M[1,\$]$ la mossa di `accept`.
 * Inseriamo un `goto Q` in tutte le celle $M[P,Y]$ dove $Y$ è un non-terminale per il quale esiste $\tau(P,Y) = Q$.
 * Infine inseriamo `error` in tutte le altre celle.
@@ -229,4 +230,7 @@ Abbiamo quindi dei conflitti cha vanno risolti "a mano":
 * In $M[5,*]$ tengo s4 così * avrà la precedenza sugli altri operatori.
 * In $M[6,+]$ tengo r2 per dare la precedenza a \*.
 * In $M[6,*]$ tengo r2  per rendere * associativo a sinistra.
+Avremmo potuto modificare la grammatica in:
+$$\begin{cases} E \to E+T \ | \ T \\ T \to T*id \ | \ id \end{cases}$$
+Bidogna fare attenzione perchè l'ordine è importante, infatti se avessi usato, nella prima produzione, la forma $E \to T+E$ non avrei avuto l'associatività a sinistra perchè la serie di somme si espande a destra, invece se avessi inserito $E \to E*T$ avrei datto la priorità alla somma che si sarebbe trovavata più in fondo nell'albero di derivazione.  
 Esistono casi in cui risolvere i conflitti non è possibile, per cui abbiamo bisogno degli LR(1)-item.

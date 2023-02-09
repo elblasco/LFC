@@ -28,7 +28,7 @@ Per le grammatiche LL(1) possiamo creare una tabella di parsing per guidare le d
 | $T^\prime$ |  | $T\prime \to \varepsilon$ | $T^\prime \to ∗FT^\prime$ |  | $T^\prime \to \varepsilon$ | $T^\prime \to \varepsilon$|  
 | $F$ | $F \to id$ |  |  | $F \to (E)$ |  |  |
 
-Quindi data una parola $w$ dobbiamo leggerla e, consumando l'input, fare la produzione nella casella $[ T,w[i]]$.
+Quindi data una parola $w$ dobbiamo leggerla e, consumando l'input, fare la produzione nella casella $[ T,w[i]]$.  
 Se capitiamo in una casella che è vuota dobbiamo laniare un errore.
 ### Algoritmo
 ````
@@ -50,21 +50,21 @@ while X != $ do
 	else if M[X , b] = X → Y1 . . . Yk then
 		output(X → Y1 . . . Yk );
 		S.pop();
-		push Yk ;
-		. . . ;
+		push Yk;
+		. . . ;       //Metto nello Stack S solo i non-terminali
 		push Y1;
 	X = S.top();
 ````
 
 ### Tabella di parsing
-L'algoritmo per fare il parsing ha una complessità lineare con $O(|w|)$, ma si basa su una teblla, come costruiamo tale tabella?
-La cella $M[A,b]$ è consultata quando devo espandere $A$ ed il prossimo carattere in input è $b$.
+L'algoritmo per fare il parsing ha una complessità lineare con $O(|w|)$, ma si basa su una teblla, come costruiamo tale tabella?  
+La cella $M[A,b]$ è consultata quando devo espandere $A$ ed il prossimo carattere in input è $b$.  
 Questo signica che dobbiamo assegnare la cella $M[A,b] = A \to \alpha$ se :
 * Se nel body della nosra produzione con 0 o più derivazioni riesco ad avere come primo carattere la $b$, ovvero $\alpha \implies^* b \beta$. (concetto di first)
-* Oppure se $\alpha \implies^* \varepsilon$ ed è pèossibile avere $S \implies^* wA\gamma$ con $\gamma \implies^* b \beta$. (concetto di follow)
+* Oppure se $\alpha \implies^* \varepsilon$ ed è possibile avere $S \implies^* wA\gamma$ con $\gamma \implies^* b \beta$. (concetto di follow)
 ## $first(\alpha)$
 ### Definizione "normale"
-Chiamiamo $first(\alpha)$ l'insieme dei terminali che sono situati all'inizio delle stringhe che derivano da $\alpha$.
+Chiamiamo $first(\alpha)$ l'insieme dei terminali che sono situati all'inizio delle stringhe che derivano da $\alpha$.  
 Se $\alpha \implies^* \varepsilon$ allora $\varepsilon \in first(\alpha)$ è un non terminale che è *nullable* ovvero dopo alcuni passi di derivazione diventerà la parola vuota $\varepsilon$.
 ### Definizione ricorsiva
 * **Casi base:**
@@ -78,7 +78,6 @@ input: w;
 output: l'insieme dei first di una stringa
 Set first(Y1 . . . Yn) = ∅;  
 j = 1;
-n = strlen(w);
 while j ≤ n do  
 	first(Y1 . . . Yn).add(first(Yj) \ {ε});
 	if ε ∈ first(Yj) then
@@ -105,7 +104,7 @@ Facciamo qualche esempio:
 ## $follow(A)$
 La funzione $follow$ accetta come unico argomento un non-terminale.
 ### Definizione
-Con $Follow(A)$ indichiamo l'insieme dei terminali che possono seguire $A$ in qualche derivazione.
+Con $follow(A)$ indichiamo l'insieme dei terminali che possono seguire $A$ in qualche derivazione.
 ### Algoritmo
 ````
 input: un terminale A;
@@ -136,10 +135,10 @@ Iniziamo per punti:
 3. Prendiamo la prima produzione $E \to TE^\prime$ con $B = E$, $\alpha = \varepsilon$, $A = T$ e $\beta = E^\prime$, allora: 
 	1. $follow(T).add(first(E^\prime) \backslash \{\varepsilon\})$
 	2. $follow(T).add(follow(E))$
-4. Prendiamo $E^\prime \to + T E^\prime$ con $B=E$, $\alpha = +T$, $A = E^\prime$ e $\beta = \varepsilon$, allora:
+4. Prendiamo $E^\prime \to + T E^\prime$ con $B=E^\prime$, $\alpha = +T$, $A = E^\prime$ e $\beta = \varepsilon$, allora:
 	1. False
-	2. $follow(E^\prime).add(E^\prime)$ inutile
-5. Prendiamo $E^\prime \to + T E^\prime$ con $B=E$, $\alpha = +$, $A = T$ e $\beta = E^\prime$, allora:
+	2. $follow(E^\prime).add(follow(E^\prime))$ inutile
+5. Prendiamo $E^\prime \to + T E^\prime$ con $B=E^\prime$, $\alpha = +$, $A = T$ e $\beta = E^\prime$, allora:
 	1. $follow(T).add(first(E^\prime) \backslash \{\varepsilon\})$
 	2. $follow(T).add(follow(E^\prime))$
 6. Prendiamo $T \to FT^\prime$ con $B = T$, $\alpha = F$, $A = T^\prime$ e $\beta = \varepsilon$, allora:
@@ -190,37 +189,39 @@ Per ogni transizione $A \to \alpha$ devo:
 Data la grammatica $\mathcal{G}$ dire se è LL(1) o meno.
 $$\mathcal{G}: \begin{cases} E \to E + T | T \\ T \to T * F | F \\ F \to ( E ) | id \end{cases}$$
 Iniziamo a calcolare $first$ e $follow$.
-$first(E) = first(T) = first(F) = \{id, )\}$
-$follow(E) = \{+, )\}$
-$follow(T) = \{+, ∗, )\}$
+$first(E) = first(T) = first(F) = \{id, )\}$  
+$follow(E) = \{+, )\}$  
+$follow(T) = \{+, ∗, )\}$  
 $follow(F) = \{+, ∗, )\}$
+
 |  | + | * | ( | ) | id | $ |
 | --- | --- | --- | --- | --- | --- | --- |
 | E |  |  | $E \to E + T$, $E \to T$ |  | $E \to E + T$, $E \to T$ |  |
 | T |  |  | $T \to T *F$, $T \to F$ |   | $T \to T * F$, $T \to F$ |  |
 | F |  |  | $F \to ( E )$ |  | $F \to id$ |  |
+
 In questo caso viene meno il determinismo per via delle *entry multiple-defined*, ce se saremmo potuti accorgere quando abbiamo calcolati i $first$ e fermarci subito.
 ## Risorsione a sinistra
-Una grammatica si dice ricorsiva a sinistra se per qualche $A$ e qualche $\alpha$ abbiamo che $A \implies ^* \alpha$.
+Una grammatica si dice ricorsiva a sinistra se per qualche $A$ e qualche $\alpha$ abbiamo che $A \implies ^* A \alpha$.  
 Prendiamo ora in esempio la grammatica:
 $$\begin{cases} S \to B|a \\ B \to Sa|b \end{cases}$$
 Abbiamo una ricorsione a sinistra per via di $A \implies B \implies Sa$.
 ### Lemma
 Una grammatica $\mathcal{G}$ con ricorsione a sinistra non può essere LL(1).
 ### Ricorsione immediata
-Una grammatica ha ricorsione immediata se ha una o più produzioni del tipo $A \to A \alpha$.
-Prendiamo allora una produzione del tipo $A \to A \alpha | \beta$ con $\alpha \neq \varepsilon \land \beta \neq A \gamma$.
+Una grammatica ha ricorsione immediata se ha una o più produzioni del tipo $A \to A \alpha$.  
+Prendiamo allora una produzione del tipo $A \to A \alpha | \beta$ con $\alpha \neq \varepsilon \land \beta \neq A \gamma$.  
 Abbiamo quindi bisogno di un nuovo non terminale, chiamiamolo $A^\prime$, la grammatica diventerà così:
-$$\begin{cases} A \to \beta \\ A^\prime \to \alpha A^\prime | \varepsilon\end{cases}$$
+$$\begin{cases} A \to \beta A^\prime\\ A^\prime \to \alpha A^\prime | \varepsilon\end{cases}$$
 #### Caso generale
-Dobbiamo ora pensare che la ricorsione immediata può avere $n$ produzioni quindi dobbiamo generalizzare.
+Dobbiamo ora pensare che la ricorsione immediata può avere $n$ produzioni quindi dobbiamo generalizzare.  
 Consideriamo la produzione:
 $$A \to A\alpha_1 | \dots | A \alpha_n | \beta_1 | \dots | \beta_k$$
 Con $\alpha_j \neq \varepsilon$ $\forall j : 1 \leq j \leq n$ e anche $\beta_i \neq A \gamma_i$ $\forall i : 1 \leq i \leq k$, allora la possiamo trasformare in:
 $$\begin{cases} A \to \beta_1 A^\prime | \dots | \beta_k A^\prime \\ A^\prime \to \alpha_1 A^\prime | \dots | \alpha_n A^\prime | \varepsilon\end{cases}$$
 Con $A^\prime \notin \mathcal{A} \backslash T$ ovvero un non-terminale *fresh*.
 ### Ricorsione non immediata
-Facciamo ora un passo in più, ovvero in cui non basta una derivazione per avere la ricorsione a sinistra, ma ce ne possono volere anche $n$.
+Facciamo ora un passo in più, ovvero in cui non basta una derivazione per avere la ricorsione a sinistra, ma ce ne possono volere anche $n$.  
 L'idea è di ridurre gli step di derivazione e riportarci a dei casi in cui la ricorsione a sinistra è immediata, prendiamo quindi la grammatica:
 $$\begin{cases} A \to Ba | b \\ B \to Bc | Ad | b \end{cases}$$
 Notiamo che abbiamo già dei casi di ricorsione immediata ma ci manca $B \to Ad$, osserviamo quindi che $A \to Ba | b$ quindi sostituendo nella produzione precedente:
@@ -243,9 +244,9 @@ Calcoliamo ora $first$ e $follow$.
 | --- | --- | --- |
 | $E$ | (, id | $, +, \*, ) |
 | $E^\prime$ | +, \*, $\varepsilon$ | $, +, \*, ) |
-Come possiamo notare $\varepsilon \in first(E^\prime)$ per cui $first(E^\prime) \cap follow(E^\prime) = \emptyset$ altrimenti avrò delle *entry multiple-defined*, in questo caso $[E^\prime, +]$ e $[E^\prime, *]$.
-**Concludiamo** quindi che eliminare la ricorsione non implica ottenere una grammatica LL(1).
-Potremmo invece chiederci se l'eliminazione della ricorsione ci ha portato ad avere una grammatica non ambigua.
+Come possiamo notare $\varepsilon \in first(E^\prime)$ per cui $first(E^\prime) \cap follow(E^\prime) = \emptyset$ altrimenti avrò delle *entry multiple-defined*, in questo caso $[E^\prime, +]$ e $[E^\prime, *]$.  
+**Concludiamo** quindi che eliminare la ricorsione non implica ottenere una grammatica LL(1).  
+Potremmo invece chiederci se l'eliminazione della ricorsione ci ha portato ad avere una grammatica non ambigua.  
 Metto gli screen altrimenti è un casino.
 
 ![ambiguity-left-recuriosn](./img/04/ambiguity-left-recursion.png)
@@ -254,11 +255,11 @@ Prendiamo Qesto albero di derivazione e cerchiamo con un quadrato ed un cerchio 
 
 ![ambiguity-left-recursion-pt2](./img/04/ambiguity-left-recursion-pt2.png)
 
-Possiamo ora notare che possiamo scambiare i due sotto alberi avendo come radice $E^\prime$, però scambiando i due sottoalberi viene generata la stessa parola, questo da origine ad un ambiguità.
+Possiamo ora notare che possiamo scambiare i due sotto alberi avendo come radice $E^\prime$, però scambiando i due sottoalberi viene generata la stessa parola, questo da origine ad un ambiguità.  
 **Concludiamo** quindi che eliminare la ricorsione non implica eliminare l'ambiguità.
 ## Fattorizzazione a sinistra
-Consideriamo la grammatica $S \to aSb|ab$ che ci permette di denotare delle parentesi annidate.
-Sappiamo che questa grammatica non è LL(1).
+Consideriamo la grammatica $S \to aSb|ab$ che ci permette di denotare delle parentesi annidate.  
+Sappiamo che questa grammatica non è LL(1).  
 Questa grammatica può essere fattorizzata a sinistra, in genere una grammatica è fattorizzabile a sinistra se:
 * Almeno due produzioni hanno lo stesso driver.
 * Queste produzioni hanno lo stesso prefisso.
@@ -266,7 +267,7 @@ Questa grammatica può essere fattorizzata a sinistra, in genere una grammatica 
 Se la grammatica $\mathcal{G}$ può essere fattorizzata a sinistra allora sicuramente $\mathcal{G}$ non è LL(1).
 ### Stategia
 L'idea alla base è cercare di rimandare il più in la possibile la scelta delle produzioni con lo stesso prefisso.
-Quindi data una grammatica fattorizzabile $\mathcal{G}$
+Quindi data una grammatica fattorizzabile $\mathcal{G}:$
 $$A \to \alpha \beta_1 | \alpha \beta_2$$
 Possiamo andare a creare un nuovo non-terminale *fresh* e generare la grammatica $\mathcal{G}^\prime$ del tipo.
 $$\begin{cases} A \to \alpha A^\prime \\ A^\prime \to \beta_1 | \beta_2 \end{cases}$$
