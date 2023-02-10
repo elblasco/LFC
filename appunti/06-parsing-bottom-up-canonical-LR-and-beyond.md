@@ -72,7 +72,7 @@ Se proviamo a fare il parsing SLR(1) questa cosa non viene ma se proviamo a fare
 Iniziamo con la costruzione degli stati (spero vi piaccia come ho organizzato la scrittura degli stati).
 $$0 : \begin{bmatrix} S^\prime \to \cdot S, \ \{\$\} \\ \hline S \to \cdot aAd, \ \{\$\} \\ S \to \cdot bBd, \ \{\$\} \\ S \to \cdot aBe,\  \{\$\} \\ S \to \cdot bAe, \ \{\$\}\end{bmatrix}$$
 $$ \tau(0,S) = 1 : \begin{bmatrix} S^\prime \to S \cdot, \ \{\$\} \end{bmatrix}$$
-$$$\tau(0,a) = 2 : \begin{bmatrix} S \to a \cdot Ad, \ \{\$\} \\ S \to a \cdot Be, \ \{\$\} \\ \hline A \to \cdot c, \ \{d\} \\ B \to \cdot c, \ \{e\} \end{bmatrix}$$
+$$\tau(0,a) = 2 : \begin{bmatrix} S \to a \cdot Ad, \ \{\$\} \\ S \to a \cdot Be, \ \{\$\} \\ \hline A \to \cdot c, \ \{d\} \\ B \to \cdot c, \ \{e\} \end{bmatrix}$$
 $$\tau(0,b) = 3 : \begin{bmatrix} S \to b \cdot Bd, \ \{\$\} \\ S \to b \cdot Ae,\ \{\$\} \\ \hline B \to \cdot c, \ \{d\} \\ A \to \cdot c, \ \{e\} \end{bmatrix}$$
 $$\tau(2,A) = 4 : \begin{bmatrix} S \to aA \cdot d, \ \{\$\} \end{bmatrix}$$
 $$$\tau(2,B) = 5 : \begin{bmatrix} S \to aB \cdot e, \ \{\$\} \end{bmatrix}$$
