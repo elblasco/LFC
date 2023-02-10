@@ -1,10 +1,10 @@
 # 09-intermidiate-code-generator
 Ripercorriamo un istante tutte le fasi di front-end che abbiamo visto fino ad ora:
-* **Analisi lessicale:** riconosce i vari lessemi e restituire una stringa i token ovvero quegli elementi di cui ha bisogno l'analizzatore sintattico.
+* **Analisi lessicale:** riconosce i vari lessemi e restituisce una stringa i token ovvero quegli elementi di cui ha bisogno l'analizzatore sintattico.
 * **Anlisi sintattica:** tutto il parsing, quindi verifica se una serie di token appartiene o meno al linguaggio di nostra comeptenza.
 * **Analisi semantica:** compie controlli statici sulla compatibilità tra operatori e operandi come la validità delle istruzioni di controllo e condizionali come `if` e `while`.
 * **Generazione di codice intermedio:** che vedremmo ora
-E' possibile implemenatre l'analisi semantica durante l'analisi sintattica, ma questa agglomerazione è possibile anche con la generazione di codice intermedio che può essere fatta durante il parsing.
+E' possibile implementare l'analisi semantica durante l'analisi sintattica, ma questa agglomerazione è possibile anche con la generazione di codice intermedio che può essere fatta durante il parsing.
 # Codice intermedio
 E' il passo intermedio tra il nostro codice ed il codice macchina, rende più leggibile il codice macchina avvicinandosi molto.  
 E.g. nasconde le specifiche come il movimento di valori tra registri e memoria.
@@ -43,7 +43,7 @@ Supponiamo di avere un espressione del tipo:
 ````
 if ( x < 100 || x > 200 && x != y ) x=0;
 ````
-Una sua prima trasfornmazione in codice intermedio potrebbe essere:
+Una sua prima trasformazione in codice intermedio potrebbe essere:
 ````
 	IF x < 100 GOTO L2
 	GOTO L3
@@ -67,9 +67,9 @@ Possiamo quindi tradurre un *AST* in una serie di istruzioni a 3 operatori, come
 Prendiamo in esame la seguente grammatica:
 $$\begin{cases} S \to id = E \\ E \to E_1+E_2 \\ E \to -E_1 \\ E \to (E_1) \\ E \to id \end{cases}$$
 l'obbiettivo è di produrre del codice a 3 indirizzi con l'utilizzo di attributi e funzioni ausiliri:
-* `E.addr`l'indirzzo di memoria in cui c'è il valore di `E`
+* `E.addr` l'indirzzo di memoria in cui c'è il valore di `E`
 * `S.code` e `E.code` indicano il codice emesso da `S `e `E`
-* `gen(str)` emette la strimga `str`
+* `gen(str)` emette la stringa `str`
 * `newtemp()` genera un nuovo nodo
 * `⊳` questo simbolo indica la concatenazione tra frammenti di codice intermedio
 Quindi possiamo arricchire la grammatica che sta sopra con:
@@ -200,7 +200,7 @@ S -> if(B) S1  B.true = fall
 ````
 Quando il codice per `B` è generato non conosciamo ancora `S.next` quindi sarebbero necessarie due passate, una per generare il codice ed un'altra per poter inserire le destinazioni dei salti.  
 Per fortuna la Prof. ci ha svelato una strategia che ci farà dire "abbiamo vinto".  
-Per poter applicare la strategia del *backpatching* dobbiamo assumere che le istruzioni siano generate in un array e le label indichino defli indiuci per accedere all'array.  
+Per poter applicare la strategia del *backpatching* dobbiamo assumere che le istruzioni siano generate in un array e le label indichino degli indici per accedere all'array.  
 Consideriamo i seguenti attributi:
 * `B.truelist` attributo sintetizzato in cui c'è la lista dei salti in cui dobbiamo inserire una label se `B` risulta `true`.
 * `B.falselist` attributo sintetizzato in cui c'è la lista dei salti in cui dobbiamo inserire una label se `B` risulta `false`.
@@ -251,7 +251,7 @@ Esistono due strategie principali per la memorizzazione degli array:
 * *Colum-major:* cambia l'indice più a sinistra e si percorre colonna per colonna, quindi in una matriche $M$ di dimensioni $2 \times 4$ gli elemnti sono nel seguiente ordine ordine $M[0][0]$, $M[1][0]$, $M[0][1]$, $M[1][1]$, $M[0][2]$, $M[1][2]$, $\dots$
 Se gli elementi immagazzinati in un array **monodimensionale** sono $0,1,\dots , n$ allora possiamo facilmente calcolare l'indirro dell'i-esimo elemento, basta sapere l'indirzzo del primo elemento detto $base$ e la lunghezza di ogni elemento detta $w$:
 $$address\ of\ M[i] = base+(i*w)$$
-Se invece parliamo di un array **bidimensionali** dobbiamo anche conoscere la lunghezza di uin'inter riga $w_1$ allor l'indirizzo è calcolabile come:
+Se invece parliamo di un array **bidimensionali** dobbiamo anche conoscere la lunghezza di un'intera riga $w_1$ allora l'indirizzo è calcolabile come:
 $$address\ of\ M[i][j] = base + (i*w_1) + (j*w)$$
 #### Traduzione *syntax-directed* di un array
 Prendiamo una grammatica che generi vettori a $n$ dimensioni

@@ -37,13 +37,6 @@ Siano $L_1$ e $L_2$ due linguaggi liberi, allora esistono due grammatiche $G_1 =
 Senza perdere generalità possiamo affermare che non ci siano *name clash* tra i non terminali di $G_1$ e quelli di $G_2$, se fosse necessario possiamo comunque fare un *name refresh*.  
 Sia allora $G_3 = (V_1 \cup V_2 \cup \{S\}, T_1 \cup T_2, S, P_1 \cup P_2 \cup \{ S \to S_1 S_2 \})$ con $S$ un nuovo simbolo non in $V_1 \cup V_2$.  
 Allora $L(G_3)$ è libero $L(G_3) = \{w_1 w_2\ |\ w_1 \in L(G_1) \land w_2 \in L(G_2)\}$.
-## Chomsky Normal Form
-Una grammatica $G$ è in Chomsky Normal Form se e solo se:
-* Non possiede $\varepsilon$-produzioni, al massimo $S \to \varepsilon$
-* Tutte le altre produzioni hanno le forme:
-	* $A \to a$
-	* $A \to BC$
-		in cui $B$ e $C$ sono diversi da $S$.
 ## Pulire grammatiche libere
 ### Teorema
 Sia $L$ un linguaggio *contex-free*, allora esiste una gramatica *context-free* tale che $L(G) = L \backslash \{  \varepsilon \}$ e che rispetta le seguenti regole:
@@ -71,8 +64,8 @@ Ora eseguo i passaggi per eliminare tutte le $\varepsilon$-produzioni:
 
 La grammatica così diventa:
 $S \to abc | AB | A | B$
-$A \to aB$
-$B \to bA$
+$A \to aB | a$
+$B \to bA | b$
 ## Pumping lemma per cfl
 ### Lemma
 Sia $L$ un linguaggio libero, allora:
@@ -85,7 +78,7 @@ Sia $L$ un linguaggio libero, allora:
 	* $\forall i \in \mathbb{N} \ | \ uv^iwx^iy \in L$
 ### Dimostrazione
 Sia $L$ un linguaggio libero, il lemma vale per $p > 0$ e quindi per parole diverse da $\varepsilon$.  
-Consideriamo ora la grammatica nella forma normale di Chomsky $G$ tale che $L = L(G)$.  
+Consideriamo ora la grammatica nella forma ripulita $G$ tale che $L = L(G)$.  
 Così facendo nell'albero di derivazione ogni percorso dalla radice alle foglie attraversa tanti non-terminali quanti salti fa.  
 Poniamo $p$ come la lunghezza della parola più lunga ottenibile dall'albero di derivazione che ha come altezza il numero di caratteri non-terminali della grammatica (quindi non ci sono non-terminali ripetuti).  
 Poniamo quindi $z \in L$ tale che $|z| > p$, allora esiste un albero di derivazione per $z$ la cui altezza è strettamente maggiore del numero di non terminali.  
@@ -159,8 +152,8 @@ Sia $k$ il numero di non terminali in $G$ e che essendo in *Chomsky nomrla form*
 
 ![tree-pumping-variant](./img/02/pumping-variant.png)
 
-Pongo allora $p = 2^{k+1}$ e $z \in L$ tale che $|z| \geq p$, allora l'albero di derivazione di $z$ avrà almeno $k+2$ livelli.
-Il percorso più lungo attraversa $k+1$ non terminali, quindi c'è almeno una coppia lungo il percorso.
+Pongo allora $p = 2^{k+1}$ e $z \in L$ tale che $|z| \geq p$, allora l'albero di derivazione di $z$ avrà almeno $k+2$ livelli.  
+Il percorso più lungo attraversa $k+1$ non terminali, quindi c'è almeno una coppia lungo il percorso.  
 Da qui si prosegue come nella dimostrazione del pumping lemma per cfl "normale".
 ## Non chiusura rispetto all'intersezione
 ### Lemma
