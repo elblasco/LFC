@@ -145,7 +145,7 @@ $$\varepsilon - \text{closure}(T) = \bigcup_{t \in T} \varepsilon - \text{closur
 Per eseguire l'algoritmo useremo le seguenti strutture dati:
 * Uno stack;
 * Un array di boolean `alreadyOn` di dimensione $|S|$ per verificare in tempo costante se uno stato $t$ è nello stack;
-* Una matrice per registrare move$_n$, ogni entry ($t, x$) è una linked list contenente tutti gli stati raggiungibili con una $x$-transizione da $t$.
+* Una matrice per registrare move$_n$, ogni entry ($t, x$) è una linked listz contenente tutti gli stati raggiungibili con una $x$-transizione da $t$.
 Supponiamo di avere la struttura move$_n$ con scope globale.
 ````
 function closure-wrapper()
@@ -371,13 +371,13 @@ Allora ci sono due percorsi in $\mathcal{D}$ tali che:
 * La lunghezza è $n$.
 * Compongono rispettivamente $w_1$ e $w_2$ con $w_1 \neq w_2$.
 * Condividono almeno un nodo.
-Allora per degli stati $x_1, x_2$ e  $x$; ho due possibilità mutualmente esclusive.
+Allora per i cammini $x_1, x_2$ e  $x$; ho due possibilità mutualmente esclusive.
 * $w_1 = x_1 a x$ e $w_2 = x_2 b x$
 * $w_1 = x_1 b x$ e $w_2 = x_2 a x$
 Possiamo supporre senza problemi che $w_1 = x_1 a x$ e $w_2 = x_2 b x$.  
 Allora possiamo definire $w^\prime_1 = x_1 a b^{n-1} \in L(\mathcal{D})$, lo stato che raggiunge $w^\prime_1$ in $\mathcal{D}$ è finale.  
 Ma allora ho una contraddizione perchè lo stato non può essere finale visto che è raggiunto anche da $x_2bb^{n-1} \notin L(\mathcal{D})$.  
-Di conseguenza non posso avere l'ultimo nodo in comune e quindi devo avere un numero di stati tale che $k \geq 2^n$.
+Di conseguenza non posso avere l'ultima parte del cammino in comune e quindi devo avere un numero di stati tale che $k \geq 2^n$.
 ## Pumping lemma per linguaggi regolari
 ### Lemma
 Sia $L$ un linguaggio regolare, allora:
@@ -427,8 +427,8 @@ Per dimostrarla possiamo ricondurci al caso dell'unione con *De Morgan*.
 $$L_1 \cap L_2 = \lnot (\lnot (L_1 \cap L_2)) = \lnot (\lnot L_1 \cup \lnot L_2)$$
 Ora avendo detto che l'unione ed la complementazione di due linguaggi regolari $L_{1,2}$ è regolare lo è qnche la sua intersezione.
 ## Analisi lessicale
-In questa fase vogliamo identificare quali parti del nostro codice corrispondono alle *keyword*, tipo identificatori, operatori, ecc...
-Gli elementi che vogliamo riconoscere prendono il nome di *lessemi* ed il nostro obbiettivo è trasformarli in un flusso di token che andranno a costruire i terminali della nostra grammatica.
+In questa fase vogliamo identificare quali parti del nostro codice corrispondono alle *keyword*, tipo identificatori, operatori, ecc...  
+Gli elementi che vogliamo riconoscere prendono il nome di *lessemi* ed il nostro obbiettivo è trasformarli in un flusso di token che andranno a costruire i terminali della nostra grammatica.  
 Tpicamente esistono token univoci:
 * per ogni keyword tipo `for`, `while`, ecc...
 * per ogni operatore, infatti in C `+` e `++` hanno token diversi
