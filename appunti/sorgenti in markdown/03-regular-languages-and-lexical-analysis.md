@@ -31,7 +31,7 @@ Consideriamo un'espressione regolare $r$ su $\mathcal{A}$, il linguaggio denotat
 * **Passo induttivo:**
 	* Se $r = r_1 \ | \ r_2$ allora $L(r) = L(r_1) \cup L(r_2)$
 	* Se $r = r_1r_2$ allora $L(r) = \{ w_1w_2 \ | \ w_1 \in L(r_1) \land w_2 \in L(r_2) \}$
-	* Se $r = r^*_1$ allora $L(r) = \{ \varepsilon \} \cup \{ w_1 w_2 \dots w_k \ | \ k\ \geq 1 \land \forall i : 1 \leq i \leq k.w_i \in L(r_1)\}$
+	* Se $r = r_1^{*}$ allora $L(r) = \{ \varepsilon \} \cup \{ w_1 w_2 \dots w_k \ | \ k\ \geq 1 \land \forall i : 1 \leq i \leq k.w_i \in L(r_1)\}$
 	* Se $r = (r_1)$ allora $L(r) = L(r_1)$
 Come nell'aritmetica anche qua i vari operatori hanno delle precedenze:
 1. Kleene star
