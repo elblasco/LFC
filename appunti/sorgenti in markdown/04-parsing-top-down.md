@@ -159,7 +159,7 @@ Iniziamo per punti:
 	2. False
 |  | first | computazione | follow |
 | ---| --- | --- | --- |
-| $E$ | {$(, id$} |$, )| $\{\$,)\}$|
+| $E$ | {$(, id$} | $, ) | $\{\$,)\}$|
 | $E^\prime$ | {$+, \varepsilon$} | follow(E)| $\{\$,)\}$ |
 | $T$ | {$id, ($} | +, follow(E) | $\{+,\$,)\}$ |
 | $T^\prime$ | {$\varepsilon, *$} | follow(T) | $\{+,\$,)\}$ |

@@ -148,7 +148,7 @@ Possiamo vedere che $w_1 \notin L$ per cui $L$ non è un linguaggio libero.
 Trasformiamo una grammatica $G^\prime$ in una grammatica in *Chomsky normal form* $G$, quindi avrà la forma.
 $$G: \begin{cases} A \to a\\  A \to A_1 A_2 \\ \vdots \end{cases}$$
 ### Dimostrazione
-Sia $k$ il numero di non terminali in $G$ e che essendo in *Chomsky nomrla form* l'albero di derivazione di $L(G)$ sarà sempre un albero binario del tipo:
+Sia $k$ il numero di non terminali in $G$ e che essendo nella *forma ripulita* l'albero di derivazione di $L(G)$ sarà sempre un albero binario del tipo:
 
 ![tree-pumping-variant](./img/02/pumping-variant.png)
 
