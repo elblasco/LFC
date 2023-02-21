@@ -233,5 +233,5 @@ Abbiamo quindi dei conflitti cha vanno risolti "a mano":
 * In $M[6,*]$ tengo r2  per rendere * associativo a sinistra.
 Avremmo potuto modificare la grammatica in:
 $$\begin{cases} E \to E+T \ | \ T \\ T \to T*id \ | \ id \end{cases}$$
-Bidogna fare attenzione perchè l'ordine è importante, infatti se avessi usato, nella prima produzione, la forma $E \to T+E$ non avrei avuto l'associatività a sinistra perchè la serie di somme si espande a destra, invece se avessi inserito $E \to E*T$ avrei datto la priorità alla somma che si sarebbe trovavata più in fondo nell'albero di derivazione.  
+Bisogna fare attenzione perchè l'ordine è importante, infatti se avessi usato, nella prima produzione, la forma $E \to T+E$ non avrei avuto l'associatività a sinistra perchè la serie di somme si espande a destra, invece se avessi inserito $E \to E*T$ avrei datto la priorità alla somma che si sarebbe trovavata più in fondo nell'albero di derivazione.  
 Esistono casi in cui risolvere i conflitti non è possibile, per cui abbiamo bisogno degli LR(1)-item.
