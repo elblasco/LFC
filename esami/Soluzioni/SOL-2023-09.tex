@@ -1,0 +1,200 @@
+\documentclass[a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage[margin=3cm]{geometry}
+\usepackage{tikz}
+
+\usetikzlibrary{automata, positioning, arrows}
+\tikzset{
+  ->, % makes the edges directed
+  >=stealth', % makes the arrow heads bold
+  node distance=3cm, % specifies the minimum distance between two nodes. Change if necessary.
+  every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ node
+  initial text=$ $, % sets the text that appears on the start arrow
+}
+
+\title{Soluzioni esame LFC 2023-09}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Esercizio 1}
+
+\textbf{RISPOSTA:} FALSO
+
+\section*{Esercizio 2}
+
+\begin{figure}[ht]
+  \centering
+    \begin{tikzpicture}
+      \node[state, initial] (s1) {$1$};
+      \node[state, accepting, right of=s1] (s2) {$2$};
+
+      \draw (s1) edge[loop above] node{$b$} (s1)
+      (s1) edge[above] node{$a,b$} (s2);
+    \end{tikzpicture}
+\end{figure}
+\textbf{RISPOSTA:} 2 stati, 1 finale.
+\section*{Esercizio 3}
+
+\begin{figure}[ht]
+  \centering
+    \begin{tikzpicture}[caption=test]
+      \node[state, initial, accepting] (A) {A};
+      \node[state, right of=A] (B) {B};
+      \node[state, accepting, below of=B] (C) {C};
+      \node[state, accepting, below right of=C] (D) {D};
+      \node[state, below of=A] (E) {E};
+      \node[state, below right of=A] (F) {F};
+
+      \draw (A) edge[above] node{$a$} (B)
+      (A) edge[left] node{$a$} (E)
+      (B) edge[left] node{$a$} (C)
+      (B) edge[above, bend right] node{$a$} (F)
+      (D) edge[above, bend right] node{$a$} (B)
+      (D) edge[above, bend left] node{$a$} (E)
+      (E) edge[above] node{$a$} (C)
+      (E)  edge[above, bend left] node{$a$} (F);
+    \end{tikzpicture}
+  \caption{NFA di partenza}
+\end{figure}
+
+Ora eseguo la subset construction per trovare il numero di stati.\\
+Le lettere in grassetto sono stati finali.
+
+\begin{figure}[ht]
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    & $a$\\
+    \hline
+    $T_{0}$ = \textbf{A} & $T_{1}$\\
+    \hline
+    $T_{1}$ = B, E & $T_{2}$\\
+    \hline
+    $T_{2}$ = \textbf{C}, F & $\emptyset$ \\
+    \hline
+  \end{tabular}
+\end{figure}
+
+\textbf{RISPOSTA:} 3 stati, 2 finali.
+
+\section*{Esercizio 4}
+
+first($S$) = \{$a,b,\varepsilon$\} follow($S$) = \{$\$$\}\\
+first($B$) = \{$a,b,\varepsilon$\} follow($B$) = \{$\$$\}
+
+\textbf{RISPOSTA:}
+\begin{figure}[ht]
+  \centering
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    & $a$ & $b$ & $\$$\\
+    \hline
+    $S$
+    & \begin{tabular}{@{}c@{}}$S \to aS$ \\ $S \to B$\end{tabular}
+    & $S \to B$
+    & \begin{tabular}{@{}c@{}}$S \to B$ \\ $S \to \varepsilon$\end{tabular}\\
+    \hline
+  \end{tabular}
+\end{figure}
+
+\section*{Esercizio 5}
+
+\'E necessario prendere il DFA della tabella e aggiungere un pozzo per rendere completa la funzione di transizione.\\
+\textbf{RISPOSTA:} MINIMO.
+
+\section*{Esercizio 6}
+
+\begin{minipage}{0.25\textwidth}
+  0:
+  \begin{tabular}{|c|}
+    \hline
+    $S^{\prime} \to \cdot S$, \$\\
+    \hline
+    $S \to \cdot aS$, \$\\
+    $S \to \cdot B$, \$\\
+    $S \to \cdot$, \$\\
+    $B \to \cdot bB$, \$\\
+    $B \to \cdot S$, \$\\
+    \hline
+  \end{tabular}
+\end{minipage}
+\begin{minipage}{0.25\textwidth}
+  $\tau (0,a)$=1
+  \begin{tabular}{|c|}
+    \hline
+    $S \to a \cdot S$, \$\\
+    \hline
+    $S \to \cdot aS$, \$\\
+    $S \to \cdot B$, \$\\
+    $S \to \cdot$, \$\\
+    $B \to \cdot bB$, \$\\
+    $B \to \cdot S$, \$\\
+    \hline
+  \end{tabular}
+\end{minipage}
+\begin{minipage}[c]{0.25\textwidth}
+  $\tau (1,a) = 1$
+\end{minipage}
+\begin{minipage}{0.25\textwidth}
+  $\tau (1,S)$=2
+  \begin{tabular}{|c|}
+    \hline
+    $S \to aS \cdot $, \$\\
+    $B \to S  \cdot$, \$\\
+    \hline
+  \end{tabular}
+\end{minipage}
+
+\textbf{RISPOSTA:} conflitto r/r in $T[I[\![aaS]\!], \$]$ tra $S \to aS$ e $B \to S$.
+
+\section*{Esercizio 7}
+
+Se già la tabella LR(1) ha un conflitto possiamo dire che non è LALR(1).\\
+\textbf{RISPOSTA:} NON LALR.
+
+\section*{Esercizio 8}
+
+\textbf{RISPOSTA:} $[P[\![BaB]\!],a]$ è da risolvere in favore della reduce.
+
+\section*{Esercizio 9}
+
+\textbf{RISPOSTA:}
+\begin{lstlisting}
+  L.array = table.get(id)
+  L.width = L.array_ewidth
+  L.addr = newtemp()
+  gen(L.addr '=' E.addr '*' L.width)
+\end{lstlisting}
+
+\section*{Esercizio 10}
+
+\begin{figure}
+  \centering
+    \begin{tikzpicture}
+      \node[state] (A) {2};
+      \node[state, below right of=A] (B) {1};
+      \node[state, below left of=B] (C) {3};
+      \node[state, below left of=C] (D) {5};
+      \node[state, below right of=B] (E) {4};
+      \node[state, below right of=E] (F) {5};
+
+      \draw (A) edge[] node{} (B)
+      (B) edge[] node{} (C)
+      (C) edge[] node{} (D)
+      (B) edge[] node{} (E)
+      (E) edge[] node{} (F);
+    \end{tikzpicture}
+\end{figure}
+
+Disegno dell'albero da valutare nella prossima pagina.\\
+\textbf{RISPOSTA:} 541352
+
+\end{document}

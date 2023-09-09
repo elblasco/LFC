@@ -1,0 +1,137 @@
+\documentclass[a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage[margin=3cm]{geometry}
+
+\title{Esame LFC 2023-09}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Esercizio 1}
+
+``Se una grammatica è LR(1) allora è anche LALR(1).'' se la frase è vera scrivere \textbf{VERO} altrimenti \textbf{FALSO}.
+
+\section*{Esercizio 2}
+
+Sia $r = a | (\varepsilon | b)(\varepsilon | b)^{*}a$ un espressione regolare e $\mathcal{D}$ il DFA minimo tale che $L(r) = L(\mathcal{D})$, quanti stati ha $\mathcal{D}$? Quanti di questi sono finali?
+
+\section*{Esercizio 3}
+
+Sia $\mathcal{N}$ un NFA con stato iniziale A e stati finali \{A, C, D\}.
+\begin{center}
+  $\mathcal{N}$:
+  \begin{tabular}{|c|c|}
+    \hline
+    & a\\
+    \hline
+    A & \{B, E\}\\
+    \hline
+    B & \{C, F\}\\
+    \hline
+    C & $\emptyset$\\
+    \hline
+    D & \{B, E\}\\
+    \hline
+    E & \{C, F\}\\
+    \hline
+    F & $\emptyset$\\
+    \hline
+  \end{tabular}
+\end{center}
+Dire quanti stati ha il DFA ottenuto con subset construction da $\mathcal{N}$, quanti di questi stati sono finali?
+
+\section*{Esercizio 4}
+
+\begin{equation*}
+  \mathcal{G}_{235}:
+  \begin{cases}
+    &S \to aS | B | \varepsilon\\
+    &B \to bB | S
+  \end{cases}
+\end{equation*}
+Scrivere la riga della tabella di parsing LL(1) per il non terminale S.
+
+\section*{Esercizio 5}
+
+Sia $\mathcal{D}$ un DFA con stato iniziale A e stato finale B.
+\begin{center}
+  $\mathcal{D}$:
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & a & b\\
+    \hline
+    A & B & C\\
+    \hline
+    B & D & C\\
+    \hline
+    C & D & $\emptyset$\\
+    \hline
+    D & C & B\\
+    \hline
+  \end{tabular}
+\end{center}
+Scrivere ``\textbf{MINIMO}'' se $\mathcal{D}$ è già minimo, altrimenti scrivere quanti stati ha il DFA minimo e quanti di questi sono finali.
+
+\section*{Esercizio 6}
+
+Sia $\mathcal{A}$ l'automa caratteristico per il paringLR(1) di $\mathcal{G}_{235}$, $I$ lo stato iniziale di $\mathcal{A}$, $T$ la tabella di parsing LR(1) per $\mathcal{G}_{235}$. Se $T$ non contiene alcun conflitto nello stato $I[\![aaS]\!]$, rispondere ``NO CONFLICT''. Altrimenti, per ciascuna $X$ tale che $T[I[\![aaS]\!], X]$ contiene un conflitto, dire, specificando quale $X$ si fa riferimento: (i) di che tipo di conflitto si tratta; (ii) quale/i riduzione/i sono coinvolte.
+
+\section*{Esercizio 7}
+
+Se $\mathcal{G}_{235}$ è una grammatica LALR(1) scrivere ``\textbf{LALR}'' altrimenti scrivere ``\textbf{NON LALR}''.
+
+\section*{Esercizio 8}
+
+\begin{equation*}
+  S_{235}:
+  \begin{cases}
+    S \to B & \{S.v = B.v\}\\
+    B \to t & \{B.v = true\}\\
+    B \to f & \{B.v = false\}\\
+    B \to B_{1}\ i\ B_{2} & \{B.v = (not\ B_{1}.v)\ or\ B_{2}.v\}\\
+    B \to B_{1}\ a\ B_{2} & \{B.v = B_{1}.v\ and\ B_{2}.v\}\\
+    B \to n\ B_{1} & \{B.v = not\ B_{1}.v\}
+  \end{cases}
+\end{equation*}
+Il praser LALR(1) per $S_{235}$ ha 6 conflitti in $[P[\![n\ B]\!], i]$, $[P[\![n\ B]\!], a]$, $[P[\![B\ i\ B]\!], i]$, $[P[\![B\ i\ B]\!], i]$, $[P[\![B \ a\ B]\!], i]$ e in $[P[\![B\ a\ B]\!], i]$. Per rendere l'operatore $a$ associativo a sinistra che conflitto/i devo risolvere? Con che operazione?
+
+\section*{Esercizio 9}
+
+\begin{equation*}
+  \begin{cases}
+    S \to id\ =\ E & \{gen(table.get(id)\ '='\ E.addr)\}\\
+    L \to id\ [\ E\ ]
+  \end{cases}
+\end{equation*}
+Completare la grammatica con le regole da associare alla seconda produzione, la grammatica è l'esempio visto in classe per l'indirzzamento di array in row major order.
+
+\section*{Esercizio 10}
+
+\begin{equation*}
+  \begin{cases}
+    R \to S & \{eval(S.n)\}\\
+    S \to a\ A\ B & \{S.n = newNode(1, A.n, B.n)\}\\
+    S \to a\ d\ S_{1} & \{S.n = newNode(2, null, S_{1}.n)\}\\
+    A \to C\ a & \{A.n = newNode(3, C.n, null)\}\\
+    B \to C\ b & \{B.n = newNode(4, null, C.n)\}\\
+    C \to \varepsilon & \{C.n = newNode(5, null, null)\}
+  \end{cases}
+\end{equation*}
+La funzione $newNode(val,sx, dx)$ crea un nodo il valore è $val$ e $sx, dx$ sono rispettivamente i figli destro e sinistro. La funzione $eval(N)$ è definita come:
+\begin{lstlisting}[mathescape=true]
+  eval(N){
+    if (N.dx $\ne$ null) eval(N.dx)
+    print(N.val)
+    if (N.sx $\ne$ null) eval(N.sx)
+  }
+\end{lstlisting}
+Se la parola $adaab$ non appartiene al linguaggio scrivere ``\textbf{ERRORE}'' altrimenti scrivere cosa ritorna la funzine \texttt{eval}.
+
+\end{document}
