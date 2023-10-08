@@ -2,7 +2,6 @@
 Linguaggi Formali e Compilatore A.A. 2022/2023  
 Il contenuto di questa repo:
 + [Appunti in pdf e markdown fatti da me](https://github.com/ElBlasco69/LFC/tree/main/appunti)
-+ [Libri di testo del corso](https://github.com/ElBlasco69/LFC/tree/main/book)
 + [Slide del corso](https://github.com/ElBlasco69/LFC/tree/main/slides)
 + [Repo con mini-compilatore](https://github.com/Wilfred/babyc/tree/master/c99)
 + [Esami **NON FATTI DA ME**](https://github.com/ElBlasco69/LFC/tree/main/esami)
