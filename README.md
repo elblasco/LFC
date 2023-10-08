@@ -1,5 +1,7 @@
 # LFC
 Linguaggi Formali e Compilatore A.A. 2022/2023  
+Repo fatta a tempo perso, non riceverà aggoiornamenti.  
+Se volete modificare qualcosa, create un vostro branch per poi fare una merge request.  
 Il contenuto di questa repo:
 + [Appunti in pdf e markdown fatti da me](https://github.com/ElBlasco69/LFC/tree/main/appunti)
 + [Slide del corso](https://github.com/ElBlasco69/LFC/tree/main/slides)
