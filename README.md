@@ -9,5 +9,5 @@ Il contenuto di questa repo:
     - Per la prima parte del primo laboratorio abbiamo usato [regex101](https://regex101.com/) per le regex.
 + I siti must have:
     - [Parsing bottom-up e top-down](https://jsmachines.sourceforge.net/machines/)
-    - [Operazioni sui grafi](https://cyberzhg.github.io/toolbox/)
+    - [Utils varie](https://cyberzhg.github.io/toolbox/)
     - [Da Regex a DFA](https://ivanzuzak.info/noam/webapps/fsm_simulator/)
